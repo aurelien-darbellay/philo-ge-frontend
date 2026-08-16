@@ -1,9 +1,11 @@
 import { Link } from "react-router-dom";
+import { useText } from "../../../i18n/useText";
 import { BrandMark } from "../../ui/BrandMark/BrandMark";
-import { landingFooterDefaultText as text } from "./LandingFooter.text";
+import { landingFooterText } from "./LandingFooter.text";
 import styles from "./LandingFooter.module.css";
 
 export function LandingFooter() {
+  const text = useText(landingFooterText);
   return (
     <footer className={styles.footer} id="archives">
       <div className={styles.inner}>

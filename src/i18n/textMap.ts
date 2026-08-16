@@ -2,8 +2,15 @@ export const languages = ["fr", "de", "it", "en"] as const;
 export type Language = (typeof languages)[number];
 export const defaultLanguage: Language = "fr";
 
+export const languageLocales: Record<Language, string> = {
+  fr: "fr-CH",
+  de: "de-CH",
+  it: "it-CH",
+  en: "en-CH",
+};
+
 type TextValues = Record<string, string>;
-type MatchingText<T extends TextValues> = { [K in keyof T]: string };
+export type MatchingText<T extends TextValues> = { [K in keyof T]: string };
 
 export type TextMap<T extends TextValues> = {
   fr: T;

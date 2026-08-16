@@ -9,23 +9,25 @@ import { Card } from "../../components/ui/Card/Card";
 import { Checkbox } from "../../components/ui/Checkbox/Checkbox";
 import { LoadingIndicator } from "../../components/ui/LoadingIndicator/LoadingIndicator";
 import { TextField } from "../../components/ui/TextField/TextField";
-import { loginPageDefaultText as text } from "./LoginPage.text";
+import { useText } from "../../i18n/useText";
+import { loginPageText } from "./LoginPage.text";
 import styles from "./LoginPage.module.css";
-
-function message(error: unknown): string {
-  if (error instanceof ApiError && error.code === "invalid_credentials") return text.invalidCredentials;
-  if (error instanceof ApiError && error.code === "too_many_attempts") return text.tooManyAttempts;
-  return text.genericError;
-}
 
 export function LoginPage() {
   const { user, loading, login } = useAuth();
+  const text = useText(loginPageText);
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
+
+  const message = (caught: unknown): string => {
+    if (caught instanceof ApiError && caught.code === "invalid_credentials") return text.invalidCredentials;
+    if (caught instanceof ApiError && caught.code === "too_many_attempts") return text.tooManyAttempts;
+    return text.genericError;
+  };
 
   if (loading) return <LoadingIndicator />;
   if (user) return <Navigate to="/espace-membre" replace />;

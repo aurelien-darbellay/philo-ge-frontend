@@ -1,7 +1,9 @@
-import { featuredEncounterDefaultText as text } from "./FeaturedEncounter.text";
+import { useText } from "../../../i18n/useText";
+import { featuredEncounterText } from "./FeaturedEncounter.text";
 import styles from "./FeaturedEncounter.module.css";
 
 export function FeaturedEncounter() {
+  const text = useText(featuredEncounterText);
   return (
     <section className={styles.section} id="programme" aria-labelledby="featured-title">
       <div className={styles.inner}>

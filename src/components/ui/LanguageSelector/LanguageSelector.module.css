@@ -1,0 +1,22 @@
+.selector {
+  width: 2.5rem;
+  aspect-ratio: 1;
+  padding: 0;
+  display: inline-grid;
+  place-items: center;
+  flex: 0 0 auto;
+  border: 1px solid var(--color-border-solid);
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--color-ink);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  letter-spacing: var(--letter-spacing-label);
+  cursor: pointer;
+  transition: background-color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.selector:hover {
+  border-color: var(--color-primary-soft);
+  background: var(--color-surface);
+}

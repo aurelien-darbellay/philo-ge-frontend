@@ -116,10 +116,12 @@ export const componentText = {
 export const defaultLanguage = "fr";
 ```
 
-- Components should read copy through a small local lookup boundary so the
-  selected language can later come from a shared language context without
-  rewriting the text maps.
-- Until a language context exists, render the French text map.
+- Components must read localized copy through `useText` so the selected value
+  always comes from the shared `LanguageContext`.
+- French remains the default and fallback language, but components must not
+  import a fixed French text root or bypass the language context.
+- Use the shared `LanguageSelector` for language switching. Do not create
+  component-local language state or a second language preference store.
 - Generic UI primitives should receive contextual user-facing copy through
   typed props. The page or feature component that owns the meaning must source
   that copy from its own text map.
@@ -144,7 +146,15 @@ export const defaultLanguage = "fr";
 - Do not communicate meaning through color alone.
 - Ensure interactive controls have clear hover, focus, disabled, loading, and
   error states.
-- Build layouts mobile-first and verify them at narrow and wide viewport sizes.
+- Do not prioritize one viewport at the expense of another. Preserve the
+  intended desktop composition while explicitly designing and validating
+  narrow-screen behavior for every layout change.
+- Keep essential navigation visible and accessible at narrow viewport widths;
+  do not hide it without providing an equivalent accessible control.
+- Decorative elements must never overlap, obscure, or reduce the legibility of
+  content at any supported viewport width.
+- Validate responsive work at approximately 320–390px mobile widths and at
+  1280px or wider desktop widths.
 - Respect reduced-motion preferences for nonessential animation.
 
 ## TypeScript and React

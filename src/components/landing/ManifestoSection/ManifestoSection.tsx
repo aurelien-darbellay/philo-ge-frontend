@@ -1,7 +1,9 @@
-import { manifestoSectionDefaultText as text } from "./ManifestoSection.text";
+import { useText } from "../../../i18n/useText";
+import { manifestoSectionText } from "./ManifestoSection.text";
 import styles from "./ManifestoSection.module.css";
 
 export function ManifestoSection() {
+  const text = useText(manifestoSectionText);
   return (
     <section className={styles.section} id="association" aria-labelledby="manifesto-title">
       <div className={styles.inner}>

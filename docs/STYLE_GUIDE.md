@@ -207,22 +207,34 @@ Interactions should be quiet and immediate:
 
 ## Responsive behavior
 
-Build mobile-first and preserve the editorial hierarchy at narrow widths.
+Do not prioritize one viewport at the expense of another. Preserve the
+intended desktop composition while explicitly designing narrow-screen behavior
+for every layout change.
 
 - Collapse multi-column sections into a clear single-column reading order.
-- Keep the logo and member entry visible even when secondary navigation is
-  hidden.
+- Keep the logo, member entry, and essential navigation visible and accessible
+  at narrow widths. Do not hide navigation without an equivalent accessible
+  control.
 - Scale display typography through tokens rather than isolated media-query
   values.
-- Reduce offset headings and decorative geometry when they threaten content
-  legibility.
+- Reduce offset headings and move decorative geometry into contained regions
+  when needed. Decorative elements must never overlap, obscure, or reduce the
+  legibility of content.
 - Maintain shared gutters and aligned separators at every viewport width.
+- Validate responsive work at approximately 320–390px mobile widths and at
+  1280px or wider desktop widths.
 
 ## Content and localization
 
 French is the default language. All user-facing copy stays in colocated text
 maps with matching `fr`, `de`, `it`, and `en` structures, as required by
 `AGENTS.md`.
+
+Localized components read their text maps through `useText`. The shared
+`LanguageContext` owns the active language and persistence, and the circular
+`LanguageSelector` is the established language control for public and
+authenticated navigation. Do not introduce separate language state in pages
+or feature components.
 
 The writing style should be precise, welcoming, and intellectually serious.
 Avoid startup language, exaggerated claims, or overly promotional calls to

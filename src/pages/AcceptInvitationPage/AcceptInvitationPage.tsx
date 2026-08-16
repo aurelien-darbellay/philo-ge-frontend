@@ -9,21 +9,16 @@ import { Card } from "../../components/ui/Card/Card";
 import { Checkbox } from "../../components/ui/Checkbox/Checkbox";
 import { LoadingIndicator } from "../../components/ui/LoadingIndicator/LoadingIndicator";
 import { TextField } from "../../components/ui/TextField/TextField";
+import { useText } from "../../i18n/useText";
 import type { Invitation } from "../../types";
-import { acceptInvitationPageDefaultText as text } from "./AcceptInvitationPage.text";
+import { acceptInvitationPageText } from "./AcceptInvitationPage.text";
 import styles from "./AcceptInvitationPage.module.css";
-
-function message(error: unknown): string {
-  if (error instanceof ApiError && error.code === "invalid_invitation") return text.invalidInvitation;
-  if (error instanceof ApiError && error.code === "password_mismatch") return text.passwordMismatch;
-  if (error instanceof ApiError && error.code === "invalid_password") return text.invalidPassword;
-  return text.genericError;
-}
 
 export function AcceptInvitationPage() {
   const [params] = useSearchParams();
   const navigate = useNavigate();
   const { acceptInvitation } = useAuth();
+  const text = useText(acceptInvitationPageText);
   const token = params.get("token") ?? "";
   const [invitation, setInvitation] = useState<Invitation | null>(null);
   const [password, setPassword] = useState("");
@@ -33,12 +28,19 @@ export function AcceptInvitationPage() {
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
 
+  const message = (caught: unknown): string => {
+    if (caught instanceof ApiError && caught.code === "invalid_invitation") return text.invalidInvitation;
+    if (caught instanceof ApiError && caught.code === "password_mismatch") return text.passwordMismatch;
+    if (caught instanceof ApiError && caught.code === "invalid_password") return text.invalidPassword;
+    return text.genericError;
+  };
+
   useEffect(() => {
     api.inspectInvitation(token)
       .then(({ invitation: value }) => setInvitation(value))
       .catch((caught) => setError(message(caught)))
       .finally(() => setLoading(false));
-  }, [token]);
+  }, [token, text]);
 
   const submit = async (event: FormEvent) => {
     event.preventDefault();
