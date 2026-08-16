@@ -2,6 +2,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { apiAssetUrl } from "../../api";
 import { BrandMark } from "../../components/ui/BrandMark/BrandMark";
 import { LanguageSelector } from "../../components/ui/LanguageSelector/LanguageSelector";
+import { MarkdownContent } from "../../components/ui/MarkdownContent/MarkdownContent";
 import { usePublicEvent } from "../../hooks/usePublicEvent";
 import { useLanguage } from "../../i18n/LanguageContext";
 import { languageLocales } from "../../i18n/textMap";
@@ -59,7 +60,7 @@ export function EventPage() {
           {event.image_path ? <img className={styles.image} src={apiAssetUrl(event.image_path)} alt="" /> : <div className={styles.artwork} aria-hidden="true"><span /><span /><span /></div>}
         </section>
         <section className={styles.body}>
-          <article className={styles.description}><p>{event.description}</p></article>
+          <article className={styles.description}><MarkdownContent value={event.description ?? ""} /></article>
           <aside className={styles.practical}>
             <dl>
               <div><dt>{text.date}</dt><dd><time dateTime={event.starts_at}>{formattedDate}</time></dd></div>

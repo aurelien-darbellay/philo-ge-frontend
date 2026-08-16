@@ -25,10 +25,11 @@
 .artwork i:first-of-type { width: 65%; height: var(--space-2); position: absolute; left: 0; bottom: 24%; background: var(--color-motif-blue); }
 .artwork i:last-of-type { width: var(--space-3); aspect-ratio: 1; position: absolute; right: 14%; top: 22%; border-radius: 50%; background: var(--color-ink); }
 .event h3 { margin: 0 0 var(--space-2); font-family: var(--font-heading); font-size: var(--font-size-md); line-height: 1.2; }
-.event h3 { text-decoration: underline; text-decoration-color: transparent; text-decoration-thickness: 1px; text-underline-offset: var(--space-2); transition: text-decoration-color var(--transition-fast); }
+.event h3 { text-decoration: underline; text-decoration-color: transparent; text-decoration-thickness: 1px; text-underline-offset: var(--space-1); transition: text-decoration-color var(--transition-fast); }
 .event:hover .image, .event:hover .artwork, .event:focus-visible .image, .event:focus-visible .artwork { transform: translateY(var(--card-hover-lift)) rotate(var(--card-hover-rotation)); box-shadow: var(--shadow-card); }
 .event:hover h3, .event:focus-visible h3 { text-decoration-color: currentColor; }
 .event:focus-visible { outline: 1px solid var(--color-primary); outline-offset: var(--space-2); }
+.event p.cancelled { width: fit-content; margin: 0 0 var(--space-2); padding: var(--space-1) var(--space-2); border: 1px solid var(--color-danger-border); color: var(--color-danger); font-size: var(--font-size-xs); letter-spacing: var(--letter-spacing-label); text-transform: uppercase; }
 .speakers { margin: calc(var(--space-1) * -1) 0 var(--space-2); color: var(--color-primary-soft); font-size: var(--font-size-xs); line-height: 1.35; }
 .event time { color: var(--color-text-muted); font-size: var(--font-size-xs); }
 .empty { color: var(--color-text-muted); }

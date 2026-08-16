@@ -1,4 +1,4 @@
-import type { AdminUser, AuthPayload, Invitation, PublicCycle, PublicEvent } from "./types";
+import type { AdminCycleSummary, AdminUser, AuthPayload, EventInput, Invitation, PublicCycle, PublicEvent } from "./types";
 
 const API_URL = (import.meta.env.VITE_API_URL ?? "http://localhost:8080").replace(/\/$/, "");
 
@@ -23,7 +23,7 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
     ...options,
     credentials: "include",
     headers: {
-      ...(options.body ? { "Content-Type": "application/json" } : {}),
+      ...(options.body && !(options.body instanceof FormData) ? { "Content-Type": "application/json" } : {}),
       ...options.headers,
     },
   });
@@ -85,6 +85,51 @@ export const api = {
     }),
 
   users: () => request<{ users: AdminUser[] }>("/admin/users.php"),
+
+  adminEvents: (from: string, to: string) =>
+    request<{ events: PublicEvent[] }>(`/admin/events.php?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}`),
+
+  adminEvent: (id: number) => request<{ event: PublicEvent }>(`/admin/events.php?id=${id}`),
+
+  adminCycles: (from: string, to: string) =>
+    request<{ cycles: AdminCycleSummary[] }>(`/admin/cycles.php?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}`),
+
+  createEvent: (event: EventInput, csrfToken: string) =>
+    request<{ event: PublicEvent }>("/admin/events.php", {
+      method: "POST",
+      headers: { "X-CSRF-Token": csrfToken },
+      body: JSON.stringify(event),
+    }),
+
+  updateEvent: (id: number, event: EventInput, csrfToken: string) =>
+    request<{ event: PublicEvent }>(`/admin/events.php?id=${id}`, {
+      method: "PUT",
+      headers: { "X-CSRF-Token": csrfToken },
+      body: JSON.stringify(event),
+    }),
+
+  deleteEvent: (id: number, csrfToken: string) =>
+    request<{ status: "ok" }>(`/admin/events.php?id=${id}`, {
+      method: "DELETE",
+      headers: { "X-CSRF-Token": csrfToken },
+    }),
+
+  uploadEventImage: (image: File, csrfToken: string) => {
+    const body = new FormData();
+    body.append("image", image);
+    return request<{ image_path: string }>("/admin/events/image.php", {
+      method: "POST",
+      headers: { "X-CSRF-Token": csrfToken },
+      body,
+    });
+  },
+
+  setEventStatus: (id: number, status: PublicEvent["status"], csrfToken: string) =>
+    request<{ event: PublicEvent }>(`/admin/events/status.php?id=${id}`, {
+      method: "PUT",
+      headers: { "X-CSRF-Token": csrfToken },
+      body: JSON.stringify({ status }),
+    }),
 
   highlightedCycle: () => request<{ cycle: PublicCycle | null }>("/cycles/highlighted.php"),
 

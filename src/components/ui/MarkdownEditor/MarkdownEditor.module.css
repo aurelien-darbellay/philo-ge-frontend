@@ -1,0 +1,11 @@
+.field { display: grid; gap: var(--space-2); }
+.header { display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); font-size: var(--font-size-sm); font-weight: 600; }
+.mode, .toolbar { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+.mode button, .tool { padding: var(--space-2) var(--space-3); font-size: var(--font-size-sm); }
+.toolbar { padding: var(--space-2); border: 1px solid var(--color-border-solid); border-bottom: 0; background: var(--color-surface-muted); }
+.input { width: 100%; min-height: 14rem; height: auto; resize: none; overflow-y: hidden; border: 1px solid var(--color-border-solid); border-radius: 0 0 var(--radius-sm) var(--radius-sm); padding: var(--space-4); background: var(--color-surface-solid); color: var(--color-ink); outline: none; font: inherit; line-height: 1.6; }
+.input:focus { border-color: var(--color-accent-dark); box-shadow: var(--focus-ring); }
+.preview { min-height: 14rem; padding: var(--space-4); border: 1px solid var(--color-border-solid); background: var(--color-surface-solid); }
+.empty { color: var(--color-text-subtle); }
+
+@media (max-width: 47.5rem) { .header { align-items: flex-start; flex-direction: column; }.mode { width: 100%; } }

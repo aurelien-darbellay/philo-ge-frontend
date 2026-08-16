@@ -1,0 +1,9 @@
+.content { color: var(--color-ink); line-height: 1.7; }
+.content > :first-child { margin-top: 0; }
+.content > :last-child { margin-bottom: 0; }
+.content h2 { margin: var(--space-8) 0 var(--space-4); font-family: var(--font-heading); font-size: var(--font-size-xl); line-height: 1.2; }
+.content p, .content ul, .content ol, .content blockquote { margin-bottom: var(--space-5); }
+.content ul, .content ol { padding-left: var(--space-6); }
+.content li + li { margin-top: var(--space-2); }
+.content blockquote { margin-left: 0; padding-left: var(--space-5); border-left: var(--space-1) solid var(--color-motif-blue); color: var(--color-text-muted); }
+.content a { color: var(--color-primary); text-decoration-thickness: 1px; text-underline-offset: var(--space-1); }

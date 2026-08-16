@@ -53,6 +53,7 @@ export function EventShelf({ title, titleTo, dates, events, lead, pageSize = 5, 
             <i /><i />
           </div>}
           <h3>{event.title}</h3>
+          {event.status === "cancelled" && <p className={styles.cancelled}>{text.cancelled}</p>}
           {speakerNames.length > 0 && <p className={styles.speakers}>{speakerNames.join(", ")}</p>}
           <time dateTime={event.starts_at}>{dateFormatter.format(new Date(event.starts_at))}</time>
         </Link>})}

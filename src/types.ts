@@ -55,6 +55,36 @@ export type PublicEvent = {
   updated_at: string;
 };
 
+export type EventSpeakerInput = {
+  name: string;
+  role_label: string | null;
+  affiliation: string | null;
+  biography: string | null;
+  image_path: string | null;
+  display_order: number;
+};
+
+export type EventInput = {
+  cycle_id: number | null;
+  title: string;
+  summary: string | null;
+  description: string | null;
+  starts_at: string;
+  ends_at: string | null;
+  timezone: string;
+  venue_name: string | null;
+  venue_address: string | null;
+  online_url: string | null;
+  image_path: string | null;
+  speakers: EventSpeakerInput[];
+};
+
+export type AdminCycleSummary = {
+  id: number;
+  title: string;
+  status: ContentStatus;
+};
+
 export type PublicCycle = {
   id: number;
   title: string;
