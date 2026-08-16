@@ -21,6 +21,7 @@ export function AcceptInvitationPage() {
   const text = useText(acceptInvitationPageText);
   const token = params.get("token") ?? "";
   const [invitation, setInvitation] = useState<Invitation | null>(null);
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmation, setConfirmation] = useState("");
   const [rememberMe, setRememberMe] = useState(true);
@@ -30,6 +31,8 @@ export function AcceptInvitationPage() {
 
   const message = (caught: unknown): string => {
     if (caught instanceof ApiError && caught.code === "invalid_invitation") return text.invalidInvitation;
+    if (caught instanceof ApiError && caught.code === "invalid_username") return text.invalidUsername;
+    if (caught instanceof ApiError && caught.code === "username_exists") return text.usernameExists;
     if (caught instanceof ApiError && caught.code === "password_mismatch") return text.passwordMismatch;
     if (caught instanceof ApiError && caught.code === "invalid_password") return text.invalidPassword;
     return text.genericError;
@@ -47,7 +50,7 @@ export function AcceptInvitationPage() {
     setError("");
     setSubmitting(true);
     try {
-      await acceptInvitation(token, password, confirmation, rememberMe);
+      await acceptInvitation(token, username, password, confirmation, rememberMe);
       navigate("/espace-membre");
     } catch (caught) {
       setError(message(caught));
@@ -71,6 +74,7 @@ export function AcceptInvitationPage() {
               {text.invitationFor} <strong>{invitation.email}</strong>
               {text.invitationSeparator}{text.choosePassword}
             </p>
+            <TextField label={text.username} hint={text.usernameHint} type="text" minLength={3} maxLength={50} pattern="[a-zA-Z0-9._-]+" autoComplete="username" value={username} onChange={(event) => setUsername(event.target.value)} required />
             <TextField label={text.password} hint={text.passwordHint} type="password" minLength={12} maxLength={1024} autoComplete="new-password" value={password} onChange={(event) => setPassword(event.target.value)} required />
             <TextField label={text.confirmation} type="password" minLength={12} maxLength={1024} autoComplete="new-password" value={confirmation} onChange={(event) => setConfirmation(event.target.value)} required />
             <Checkbox label={text.remember} checked={rememberMe} onChange={(event) => setRememberMe(event.target.checked)} />

@@ -61,6 +61,7 @@ export const api = {
 
   acceptInvitation: (
     token: string,
+    username: string,
     password: string,
     passwordConfirmation: string,
     rememberMe: boolean,
@@ -69,6 +70,7 @@ export const api = {
       method: "POST",
       body: JSON.stringify({
         token,
+        username,
         password,
         password_confirmation: passwordConfirmation,
         remember_me: rememberMe,

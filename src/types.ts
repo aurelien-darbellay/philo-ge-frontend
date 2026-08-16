@@ -2,11 +2,13 @@ export type Role = "admin" | "guest";
 
 export type User = {
   id: number;
+  username: string;
   email: string;
   role: Role;
 };
 
 export type AdminUser = User & {
+  blocked: boolean;
   created_at: string;
 };
 

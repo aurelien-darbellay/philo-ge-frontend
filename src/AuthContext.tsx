@@ -9,6 +9,7 @@ type AuthContextValue = {
   login: (email: string, password: string, rememberMe: boolean) => Promise<void>;
   acceptInvitation: (
     token: string,
+    username: string,
     password: string,
     confirmation: string,
     rememberMe: boolean,
@@ -46,8 +47,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       csrfToken,
       loading,
       login: async (email, password, rememberMe) => applyAuth(await api.login(email, password, rememberMe)),
-      acceptInvitation: async (token, password, confirmation, rememberMe) =>
-        applyAuth(await api.acceptInvitation(token, password, confirmation, rememberMe)),
+      acceptInvitation: async (token, username, password, confirmation, rememberMe) =>
+        applyAuth(await api.acceptInvitation(token, username, password, confirmation, rememberMe)),
       logout: async () => {
         if (csrfToken) await api.logout(csrfToken);
         setUser(null);
