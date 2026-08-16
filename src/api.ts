@@ -1,4 +1,4 @@
-import type { AdminCycleSummary, AdminUser, AuthPayload, EventInput, Invitation, MediaImage, PublicCycle, PublicEvent } from "./types";
+import type { AdminCycle, AdminCycleSummary, AdminUser, AuthPayload, CycleInput, EventInput, Invitation, MediaImage, PublicCycle, PublicEvent } from "./types";
 
 const API_URL = (import.meta.env.VITE_API_URL ?? "http://localhost:8080").replace(/\/$/, "");
 
@@ -114,7 +114,25 @@ export const api = {
   adminEvent: (id: number) => request<{ event: PublicEvent }>(`/admin/events.php?id=${id}`),
 
   adminCycles: (from: string, to: string) =>
-    request<{ cycles: AdminCycleSummary[] }>(`/admin/cycles.php?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}`),
+    request<{ cycles: AdminCycle[] }>(`/admin/cycles.php?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}`),
+
+  adminCycle: (id: number) => request<{ cycle: AdminCycle }>(`/admin/cycles.php?id=${id}`),
+
+  createCycle: (cycle: CycleInput, csrfToken: string) => request<{ cycle: AdminCycle }>("/admin/cycles.php", { method: "POST", headers: { "X-CSRF-Token": csrfToken }, body: JSON.stringify(cycle) }),
+
+  updateCycle: (id: number, cycle: CycleInput, csrfToken: string) => request<{ cycle: AdminCycle }>(`/admin/cycles.php?id=${id}`, { method: "PUT", headers: { "X-CSRF-Token": csrfToken }, body: JSON.stringify(cycle) }),
+
+  deleteCycle: (id: number, csrfToken: string) => request<{ status: "ok" }>(`/admin/cycles.php?id=${id}`, { method: "DELETE", headers: { "X-CSRF-Token": csrfToken } }),
+
+  setCycleStatus: (id: number, status: AdminCycle["status"], csrfToken: string) => request<{ cycle: AdminCycle }>(`/admin/cycles/status.php?id=${id}`, { method: "PUT", headers: { "X-CSRF-Token": csrfToken }, body: JSON.stringify({ status }) }),
+
+  setCycleHighlighted: (id: number, isHighlighted: boolean, csrfToken: string) => request<{ cycle: AdminCycle }>(`/admin/cycles/highlight.php?id=${id}`, { method: "PUT", headers: { "X-CSRF-Token": csrfToken }, body: JSON.stringify({ is_highlighted: isHighlighted }) }),
+
+  uploadCycleImage: (image: File, csrfToken: string) => {
+    const body = new FormData();
+    body.append("image", image);
+    return request<{ image_path: string }>("/admin/cycles/image.php", { method: "POST", headers: { "X-CSRF-Token": csrfToken }, body });
+  },
 
   createEvent: (event: EventInput, csrfToken: string) =>
     request<{ event: PublicEvent }>("/admin/events.php", {
@@ -152,6 +170,9 @@ export const api = {
       headers: { "X-CSRF-Token": csrfToken },
       body: JSON.stringify({ status }),
     }),
+
+  setEventHighlighted: (id: number, isHighlighted: boolean, csrfToken: string) =>
+    request<{ event: PublicEvent }>(`/admin/events/highlight.php?id=${id}`, { method: "PUT", headers: { "X-CSRF-Token": csrfToken }, body: JSON.stringify({ is_highlighted: isHighlighted }) }),
 
   highlightedCycle: () => request<{ cycle: PublicCycle | null }>("/cycles/highlighted.php"),
 

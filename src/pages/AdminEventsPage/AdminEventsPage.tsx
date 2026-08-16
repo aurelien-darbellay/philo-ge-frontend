@@ -3,6 +3,7 @@ import { api, apiAssetUrl } from "../../api";
 import { useAuth } from "../../AuthContext";
 import { Alert } from "../../components/ui/Alert/Alert";
 import { Button, ButtonLink } from "../../components/ui/Button/Button";
+import { HighlightFilter } from "../../components/ui/HighlightFilter/HighlightFilter";
 import { PageHeader } from "../../components/ui/PageHeader/PageHeader";
 import { TextField } from "../../components/ui/TextField/TextField";
 import { useLanguage } from "../../i18n/LanguageContext";
@@ -32,6 +33,7 @@ export function AdminEventsPage() {
   const [from, setFrom] = useState(dateValue(today));
   const [to, setTo] = useState(dateValue(oneYearFromToday));
   const [query, setQuery] = useState("");
+  const [highlightedOnly, setHighlightedOnly] = useState(false);
   const [events, setEvents] = useState<PublicEvent[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -59,10 +61,11 @@ export function AdminEventsPage() {
 
   const normalizedQuery = normalizeSearchValue(query.trim());
   const filteredEvents = useMemo(() => events.filter((event) => {
+    if (highlightedOnly && !event.is_highlighted) return false;
     if (normalizedQuery.length === 0) return true;
     return [event.title, ...event.speakers.map((speaker) => speaker.name)]
       .some((value) => normalizeSearchValue(value).includes(normalizedQuery));
-  }), [events, normalizedQuery]);
+  }), [events, highlightedOnly, normalizedQuery]);
 
   const changeStatus = async (eventId: number, status: ContentStatus) => {
     if (!csrfToken) return;
@@ -94,6 +97,22 @@ export function AdminEventsPage() {
     }
   };
 
+  const toggleHighlighted = async (event: PublicEvent) => {
+    if (!csrfToken) return;
+    setPendingEventId(event.id);
+    setError("");
+
+    try {
+      const isHighlighted = !event.is_highlighted;
+      const { event: updated } = await api.setEventHighlighted(event.id, isHighlighted, csrfToken);
+      setEvents((current) => current.map((item) => item.id === updated.id ? updated : isHighlighted ? { ...item, is_highlighted: false } : item));
+    } catch {
+      setError(text.highlightError);
+    } finally {
+      setPendingEventId(null);
+    }
+  };
+
   const statusLabel = (status: ContentStatus) => ({
     draft: text.draft,
     published: text.published,
@@ -114,13 +133,10 @@ export function AdminEventsPage() {
     <div className={styles.filters}>
       <TextField label={text.from} type="date" value={from} onChange={(event) => setFrom(event.target.value)} required />
       <TextField label={text.to} type="date" value={to} onChange={(event) => setTo(event.target.value)} required />
-      <label className={styles.search}>
-        <span>{text.searchLabel}</span>
-        <input type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder={text.searchPlaceholder} />
-      </label>
+      <div className={styles.search}><label htmlFor="admin-event-search">{text.searchLabel}</label><div className={styles.searchFilter}><input id="admin-event-search" type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder={text.searchPlaceholder} /><HighlightFilter active={highlightedOnly} label={highlightedOnly ? text.showAll : text.showHighlighted} onToggle={() => setHighlightedOnly((value) => !value)} /></div></div>
     </div>
     {error && <Alert>{error}</Alert>}
-    {loading ? <p className={styles.state}>{text.loading}</p> : filteredEvents.length === 0 ? <p className={styles.state}>{normalizedQuery ? text.noResults : text.empty}</p> : <div className={styles.list}>
+    {loading ? <p className={styles.state}>{text.loading}</p> : filteredEvents.length === 0 ? <p className={styles.state}>{normalizedQuery || highlightedOnly ? text.noResults : text.empty}</p> : <div className={styles.list}>
       {filteredEvents.map((event) => <article className={styles.row} key={event.id}>
         {event.image_path
           ? <img className={styles.thumbnail} src={apiAssetUrl(event.image_path)} alt="" />
@@ -130,6 +146,7 @@ export function AdminEventsPage() {
           <p>{new Date(event.starts_at).toLocaleDateString(languageLocales[language])} · {statusLabel(event.status)}</p>
         </div>
         <div className={styles.actions}>
+          <Button className={`${styles.star} ${event.is_highlighted ? styles.starActive : ""}`} variant="ghost" aria-label={event.is_highlighted ? text.unhighlight : text.highlight} aria-pressed={event.is_highlighted} disabled={pendingEventId === event.id} onClick={() => toggleHighlighted(event)}>{event.is_highlighted ? "★" : "☆"}</Button>
           {actions.map((action) => <Button className={styles.statusButton} variant="secondary" disabled={pendingEventId === event.id || event.status === action.status} onClick={() => changeStatus(event.id, action.status)} key={action.status}>{action.label}</Button>)}
           <ButtonLink to={`/admin/events/${event.id}/edit`} variant="secondary">{text.update}</ButtonLink>
           <Button variant="danger" disabled={pendingEventId === event.id} onClick={() => deleteEvent(event)}>{text.delete}</Button>

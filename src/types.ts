@@ -92,6 +92,30 @@ export type AdminCycleSummary = {
   status: ContentStatus;
 };
 
+export type AdminCycle = {
+  id: number;
+  title: string;
+  slug: string;
+  description: string | null;
+  status: ContentStatus;
+  is_highlighted: boolean;
+  starts_on: string | null;
+  ends_on: string | null;
+  image_path: string | null;
+  published_at: string | null;
+  created_at: string;
+  updated_at: string;
+  events: null;
+};
+
+export type CycleInput = {
+  title: string;
+  description: string | null;
+  starts_on: string | null;
+  ends_on: string | null;
+  image_path: string | null;
+};
+
 export type PublicCycle = {
   id: number;
   title: string;

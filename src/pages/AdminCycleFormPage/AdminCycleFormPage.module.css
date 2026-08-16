@@ -1,0 +1,13 @@
+.page { width: min(100%, calc(var(--page-width-narrow) + var(--page-gutter) + var(--page-gutter))); margin-inline: auto; padding: var(--space-8) var(--page-gutter) var(--space-12); }
+.heading { display: flex; align-items: flex-start; flex-direction: column; gap: var(--space-4); }
+.card { padding: var(--space-8); }
+.form, .section { display: grid; }
+.form { gap: var(--space-12); }
+.section { gap: var(--space-5); }
+.section + .section { padding-top: var(--space-8); border-top: 1px solid var(--color-border); }
+.section h2 { margin: 0; font-family: var(--font-heading); font-size: var(--font-size-xl); }
+.twoColumns { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-5); }
+.hint, .state { color: var(--color-text-muted); }
+.preview { display: block; width: min(100%, 24rem); max-height: 18rem; object-fit: contain; }
+.actions { display: flex; align-items: center; gap: var(--space-4); }
+@media (max-width: 47.5rem) { .card { padding: var(--space-5); }.twoColumns { grid-template-columns: 1fr; }.actions { align-items: stretch; flex-direction: column; } }
