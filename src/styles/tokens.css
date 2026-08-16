@@ -67,5 +67,6 @@
   --page-width-narrow: 58rem;
   --form-width: 28rem;
   --form-width-wide: 34rem;
+  --media-grid-item-min: 10rem;
   --breakpoint-mobile: 47.5rem;
 }

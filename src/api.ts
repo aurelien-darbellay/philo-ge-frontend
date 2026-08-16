@@ -1,4 +1,4 @@
-import type { AdminCycleSummary, AdminUser, AuthPayload, EventInput, Invitation, PublicCycle, PublicEvent } from "./types";
+import type { AdminCycleSummary, AdminUser, AuthPayload, EventInput, Invitation, MediaImage, PublicCycle, PublicEvent } from "./types";
 
 const API_URL = (import.meta.env.VITE_API_URL ?? "http://localhost:8080").replace(/\/$/, "");
 
@@ -98,6 +98,14 @@ export const api = {
       method: "PUT",
       headers: { "X-CSRF-Token": csrfToken },
       body: JSON.stringify({ role }),
+    }),
+
+  mediaImages: () => request<{ images: MediaImage[] }>("/admin/media/images.php"),
+
+  deleteMediaImage: (filename: string, csrfToken: string) =>
+    request<{ status: "ok" }>(`/admin/media/images.php?filename=${encodeURIComponent(filename)}`, {
+      method: "DELETE",
+      headers: { "X-CSRF-Token": csrfToken },
     }),
 
   adminEvents: (from: string, to: string) =>

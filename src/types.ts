@@ -23,6 +23,13 @@ export type Invitation = {
   url?: string;
 };
 
+export type MediaImage = {
+  filename: string;
+  path: string;
+  size: number;
+  modified_at: string;
+};
+
 export type ContentStatus = "draft" | "published" | "cancelled";
 
 export type EventSpeaker = {
