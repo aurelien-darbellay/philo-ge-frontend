@@ -143,7 +143,7 @@ export function AdminEventFormPage() {
   if (loading) return <AppShell><main className={styles.page}><p className={styles.state}>{text.loading}</p></main></AppShell>;
 
   return <AppShell><main className={styles.page}>
-    <div className={styles.heading}><PageHeader eyebrow={text.eyebrow} title={editing ? text.editTitle : text.createTitle} /><ButtonLink to="/admin/events" variant="secondary">{text.back}</ButtonLink></div>
+    <div className={styles.heading}><ButtonLink to="/admin/events" variant="secondary">{text.back}</ButtonLink><PageHeader eyebrow={text.eyebrow} title={editing ? text.editTitle : text.createTitle} /></div>
     {error && <Alert>{error}</Alert>}
     <Card className={styles.card}><form className={styles.form} onSubmit={submit}>
       <section className={styles.section}><h2>{text.identity}</h2><TextField label={text.title} value={form.title} onChange={(event) => setField("title", event.target.value)} maxLength={255} required /><TextArea label={text.summary} value={form.summary} onChange={(event) => setField("summary", event.target.value)} maxLength={300} /><MarkdownEditor label={text.description} value={form.description} onChange={(value) => setField("description", value)} /></section>
