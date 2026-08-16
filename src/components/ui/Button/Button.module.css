@@ -1,0 +1,4 @@
+.button { border: 0; border-radius: var(--radius-sm); padding: 0.9rem var(--space-5); cursor: pointer; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; transition: transform var(--transition-fast), background var(--transition-fast); }
+.primary { background: var(--color-primary); color: white; }.primary:hover { background: var(--color-primary-hover); transform: translateY(-1px); }
+.secondary { background: var(--color-surface-muted); color: var(--color-ink); }.ghost { background: transparent; color: var(--color-primary-soft); padding-inline: 0; }
+.button:disabled { opacity: .65; cursor: wait; transform: none; }

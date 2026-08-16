@@ -1,0 +1,1 @@
+.brand { display: flex; width: fit-content; margin-right: auto; margin-bottom: auto; align-self: flex-start; align-items: flex-start; justify-content: flex-start; text-decoration: none; }.mark { display: block; width: 4rem; height: auto; object-fit: contain; }.compact .mark { width: 2.75rem; }

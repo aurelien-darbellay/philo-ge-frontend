@@ -1,0 +1,1 @@
+.screen { min-height: 100vh; display: grid; place-items: center; padding: var(--space-8); }.loader { width: var(--space-8); height: var(--space-8); border: .125rem solid var(--color-border-solid); border-top-color: var(--color-accent); border-radius: 50%; animation: spin .7s linear infinite; } @keyframes spin { to { transform: rotate(360deg); } }

@@ -1,0 +1,1 @@
+.alert { padding: .85rem var(--space-4); border-radius: var(--radius-sm); background: var(--color-danger-bg); color: var(--color-danger); border-left: .1875rem solid var(--color-danger-border); }

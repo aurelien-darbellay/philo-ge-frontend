@@ -1,0 +1,1 @@
+.badge { display: inline-block; border-radius: var(--radius-pill); padding: var(--space-1) .65rem; font-size: var(--font-size-xs); text-transform: uppercase; letter-spacing: .06em; background: var(--color-guest-bg); }.admin { background: var(--color-admin-bg); color: var(--color-danger); }

@@ -1,0 +1,8 @@
+import { defineTextMap, defaultText } from "../../i18n/textMap";
+export const adminUsersPageText = defineTextMap({
+  fr: { eyebrow: "ADMINISTRATION", title: "Membres de la communauté.", singularCount: "utilisateur inscrit", pluralCount: "utilisateurs inscrits", invite: "Inviter un utilisateur", loading: "Chargement des utilisateurs…", empty: "Aucun utilisateur inscrit.", email: "E-mail", role: "Rôle", joined: "Inscription", admin: "Administrateur", guest: "Invité", genericError: "Impossible de charger les utilisateurs." },
+  de: { eyebrow: "ADMINISTRATION", title: "Mitglieder der Gemeinschaft.", singularCount: "registrierter Benutzer", pluralCount: "registrierte Benutzer", invite: "Benutzer einladen", loading: "Benutzer werden geladen…", empty: "Keine registrierten Benutzer.", email: "E-Mail", role: "Rolle", joined: "Beigetreten", admin: "Administrator", guest: "Gast", genericError: "Benutzer konnten nicht geladen werden." },
+  it: { eyebrow: "AMMINISTRAZIONE", title: "Membri della comunità.", singularCount: "utente registrato", pluralCount: "utenti registrati", invite: "Invita utente", loading: "Caricamento utenti…", empty: "Nessun utente registrato.", email: "E-mail", role: "Ruolo", joined: "Iscrizione", admin: "Amministratore", guest: "Ospite", genericError: "Impossibile caricare gli utenti." },
+  en: { eyebrow: "ADMINISTRATION", title: "Community members.", singularCount: "registered user", pluralCount: "registered users", invite: "Invite user", loading: "Loading users…", empty: "No registered users.", email: "Email", role: "Role", joined: "Joined", admin: "Administrator", guest: "Guest", genericError: "Could not load users." },
+});
+export const adminUsersPageDefaultText = defaultText(adminUsersPageText);
