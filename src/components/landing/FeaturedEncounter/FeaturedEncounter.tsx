@@ -33,7 +33,9 @@ export function FeaturedEncounter() {
   const locale = languageLocales[language];
   const content = featured.value;
   const imagePath = content.image_path;
-  const detailEventId = featured.kind === "event" ? featured.value.id : featured.value.events[0]?.id;
+  const detailPath = featured.kind === "cycle"
+    ? `/cycles/${featured.value.id}`
+    : `/evenements/${featured.value.id}`;
   let description: string | null;
   let date: string;
   let details: string[];
@@ -89,7 +91,7 @@ export function FeaturedEncounter() {
           <h2 id="featured-title">{content.title}</h2>
           {description && <p className={styles.description}>{description}</p>}
           {details.length > 0 && <dl className={styles.details}>{details.map((detail) => <div key={detail}><dt>{detail}</dt></div>)}</dl>}
-          {detailEventId && <Link className={styles.action} to={`/evenements/${detailEventId}`}>{text.action}<span aria-hidden="true">→</span></Link>}
+          <Link className={styles.action} to={detailPath}>{text.action}<span aria-hidden="true">→</span></Link>
         </article>
       </div>
     </section>

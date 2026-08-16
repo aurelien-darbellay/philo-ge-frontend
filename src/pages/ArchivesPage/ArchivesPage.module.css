@@ -1,0 +1,18 @@
+.page { min-height: 100vh; background: var(--color-background); color: var(--color-ink); }
+.header { width: min(100%, calc(var(--page-width) + var(--page-gutter) + var(--page-gutter))); margin-inline: auto; padding: var(--space-5) var(--page-gutter); display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid var(--color-border); }
+.header a { color: inherit; text-decoration: none; }
+.headerActions { min-height: var(--space-10); display: flex; gap: var(--space-8); align-items: center; font-size: var(--font-size-sm); }
+.main { width: min(100%, calc(var(--page-width) + var(--page-gutter) + var(--page-gutter))); margin-inline: auto; padding: var(--space-8) var(--page-gutter) var(--space-12); }
+.heading { margin-bottom: var(--space-8); display: flex; align-items: end; justify-content: space-between; gap: var(--space-8); }
+.heading h1 { margin: 0; font-family: var(--font-heading); font-size: var(--font-size-section); line-height: 1; letter-spacing: -0.04em; }
+.heading > div > p { max-width: 34rem; margin-top: var(--space-4); color: var(--color-text-muted); }
+.filters { width: min(100%, var(--form-width-wide)); display: grid; gap: var(--space-5); }
+.range { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-5); }
+.search, .range label { display: grid; gap: var(--space-2); color: var(--color-text-muted); font-size: var(--font-size-xs); letter-spacing: var(--letter-spacing-label); text-transform: uppercase; }
+.search input, .range input { width: 100%; padding: var(--space-3) 0; border: 0; border-bottom: 1px solid var(--color-ink); border-radius: 0; background: transparent; color: var(--color-ink); font: inherit; font-size: var(--font-size-sm); letter-spacing: normal; text-transform: none; }
+.search input { font-size: var(--font-size-md); }
+.search input::placeholder { color: var(--color-text-subtle); }
+.search input:focus-visible, .range input:focus-visible { outline: 0; box-shadow: 0 var(--space-1) 0 0 var(--color-primary); }
+.state { padding-block: var(--space-12); border-top: 1px solid var(--color-border); color: var(--color-text-muted); }
+.state h2 { margin-bottom: var(--space-4); color: var(--color-ink); font-family: var(--font-heading); font-size: var(--font-size-xl); }
+@media (max-width: 47.5rem) { .headerActions { gap: var(--space-3); }.heading { align-items: stretch; flex-direction: column; gap: var(--space-6); }.filters { width: 100%; } }

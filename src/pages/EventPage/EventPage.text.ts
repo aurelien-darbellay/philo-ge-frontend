@@ -3,7 +3,8 @@ import { defineTextMap } from "../../i18n/textMap";
 export const eventPageText = defineTextMap({
   fr: {
     brand: "Groupe Genevois de Philosophie — accueil",
-    back: "Retour à l’accueil",
+    back: "Retour",
+    home: "Accueil",
     loading: "Chargement de la rencontre",
     notFoundTitle: "Rencontre introuvable",
     notFoundBody: "Cette rencontre n’existe pas ou n’est pas accessible au public.",
@@ -18,7 +19,8 @@ export const eventPageText = defineTextMap({
   },
   de: {
     brand: "Genfer Philosophische Gesellschaft — Startseite",
-    back: "Zurück zur Startseite",
+    back: "Zurück",
+    home: "Startseite",
     loading: "Veranstaltung wird geladen",
     notFoundTitle: "Veranstaltung nicht gefunden",
     notFoundBody: "Diese Veranstaltung existiert nicht oder ist nicht öffentlich zugänglich.",
@@ -33,7 +35,8 @@ export const eventPageText = defineTextMap({
   },
   it: {
     brand: "Gruppo Ginevrino di Filosofia — home",
-    back: "Torna alla home",
+    back: "Indietro",
+    home: "Home",
     loading: "Caricamento dell’incontro",
     notFoundTitle: "Incontro non trovato",
     notFoundBody: "Questo incontro non esiste o non è accessibile al pubblico.",
@@ -48,7 +51,8 @@ export const eventPageText = defineTextMap({
   },
   en: {
     brand: "Geneva Philosophy Group — home",
-    back: "Back to home",
+    back: "Back",
+    home: "Home",
     loading: "Loading event",
     notFoundTitle: "Event not found",
     notFoundBody: "This event does not exist or is not publicly accessible.",

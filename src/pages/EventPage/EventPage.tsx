@@ -1,4 +1,4 @@
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { apiAssetUrl } from "../../api";
 import { BrandMark } from "../../components/ui/BrandMark/BrandMark";
 import { LanguageSelector } from "../../components/ui/LanguageSelector/LanguageSelector";
@@ -16,13 +16,14 @@ function eventId(value: string | undefined): number | null {
 export function EventPage() {
   const text = useText(eventPageText);
   const { language } = useLanguage();
+  const navigate = useNavigate();
   const params = useParams();
   const { event, loading, failed } = usePublicEvent(eventId(params.eventId));
 
   if (loading) return <main className={styles.state} aria-live="polite">{text.loading}</main>;
 
   if (failed || !event) {
-    return <main className={styles.state}><h1>{text.notFoundTitle}</h1><p>{text.notFoundBody}</p><Link to="/">{text.back}</Link></main>;
+    return <main className={styles.state}><h1>{text.notFoundTitle}</h1><p>{text.notFoundBody}</p><Link to="/">{text.home}</Link></main>;
   }
 
   const locale = languageLocales[language];
@@ -44,7 +45,7 @@ export function EventPage() {
     <div className={styles.page}>
       <header className={styles.header}>
         <Link to="/" aria-label={text.brand}><BrandMark compact /></Link>
-        <div className={styles.headerActions}><Link to="/">{text.back}</Link><LanguageSelector /></div>
+        <div className={styles.headerActions}><button type="button" onClick={() => navigate(-1)}>{text.back}</button><LanguageSelector /></div>
       </header>
       <main>
         <section className={styles.hero}>

@@ -89,4 +89,12 @@ export const api = {
   highlightedEvent: () => request<{ event: PublicEvent | null }>("/events/highlighted.php"),
 
   event: (id: number) => request<{ event: PublicEvent }>(`/events.php?id=${id}`),
+
+  cycle: (id: number) => request<{ cycle: PublicCycle }>(`/cycles.php?id=${id}`),
+
+  cycles: (from: string, to: string) =>
+    request<{ cycles: PublicCycle[] }>(`/cycles.php?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}`),
+
+  events: (from: string, to: string) =>
+    request<{ events: PublicEvent[] }>(`/events.php?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}`),
 };

@@ -13,7 +13,7 @@ export function LandingFooter() {
           <BrandMark />
           <nav>
             <a href="mailto:contact@philo-ge.ch">{text.contact}</a>
-            <a href="#archives">{text.archiveLabel}</a>
+            <Link to="/archives">{text.archiveLabel}</Link>
             <Link to="/login">{text.memberSpace}</Link>
           </nav>
           <nav>

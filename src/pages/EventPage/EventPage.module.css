@@ -1,6 +1,7 @@
 .page { min-height: 100vh; background: var(--color-background); color: var(--color-ink); }
 .header { width: min(100%, calc(var(--page-width) + var(--page-gutter) + var(--page-gutter))); min-height: 7rem; margin-inline: auto; padding: var(--space-5) var(--page-gutter) var(--space-4); display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid var(--color-border); }
 .header a { color: inherit; text-decoration: none; }
+.header button { padding: 0; border: 0; background: transparent; color: inherit; cursor: pointer; font: inherit; }
 .headerActions { min-height: var(--space-10); display: flex; gap: var(--space-8); align-items: center; font-size: var(--font-size-sm); }
 .hero, .body, .state { width: min(100%, var(--page-width)); margin-inline: auto; padding-inline: var(--page-gutter); }
 .hero { padding-top: var(--space-8); padding-bottom: var(--space-4); display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(16rem, 0.55fr); gap: clamp(var(--space-8), 6vw, var(--space-20)); align-items: start; }

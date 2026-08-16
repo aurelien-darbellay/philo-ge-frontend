@@ -56,6 +56,8 @@
   --shadow-card: 0 1.5rem 4.375rem rgb(23 35 53 / 8%);
   --focus-ring: 0 0 0 0.1875rem rgb(169 94 52 / 12%);
   --transition-fast: 150ms ease;
+  --card-hover-lift: calc(var(--space-2) * -1);
+  --card-hover-rotation: -0.75deg;
   --page-width: 78rem;
   --page-gutter: clamp(1.25rem, 4vw, 4.5rem);
   --font-size-display: clamp(3rem, 7.5vw, 7rem);
