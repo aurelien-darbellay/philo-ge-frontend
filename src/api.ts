@@ -86,6 +86,20 @@ export const api = {
 
   users: () => request<{ users: AdminUser[] }>("/admin/users.php"),
 
+  setUserBlocked: (id: number, blocked: boolean, csrfToken: string) =>
+    request<{ user: AdminUser }>(`/admin/users/block.php?id=${id}`, {
+      method: "PUT",
+      headers: { "X-CSRF-Token": csrfToken },
+      body: JSON.stringify({ blocked }),
+    }),
+
+  setUserRole: (id: number, role: AdminUser["role"], csrfToken: string) =>
+    request<{ user: AdminUser }>(`/admin/users/role.php?id=${id}`, {
+      method: "PUT",
+      headers: { "X-CSRF-Token": csrfToken },
+      body: JSON.stringify({ role }),
+    }),
+
   adminEvents: (from: string, to: string) =>
     request<{ events: PublicEvent[] }>(`/admin/events.php?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}`),
 
