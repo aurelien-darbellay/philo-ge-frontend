@@ -1,6 +1,10 @@
-import type { AdminUser, AuthPayload, Invitation } from "./types";
+import type { AdminUser, AuthPayload, Invitation, PublicCycle, PublicEvent } from "./types";
 
 const API_URL = (import.meta.env.VITE_API_URL ?? "http://localhost:8080").replace(/\/$/, "");
+
+export function apiAssetUrl(path: string): string {
+  return `${API_URL}${path}`;
+}
 
 type ApiErrorBody = { error?: { code?: string; message?: string } };
 
@@ -79,4 +83,10 @@ export const api = {
     }),
 
   users: () => request<{ users: AdminUser[] }>("/admin/users.php"),
+
+  highlightedCycle: () => request<{ cycle: PublicCycle | null }>("/cycles/highlighted.php"),
+
+  highlightedEvent: () => request<{ event: PublicEvent | null }>("/events/highlighted.php"),
+
+  event: (id: number) => request<{ event: PublicEvent }>(`/events.php?id=${id}`),
 };
