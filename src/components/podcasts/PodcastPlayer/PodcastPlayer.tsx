@@ -8,6 +8,14 @@ import { podcastPlayerText } from "./PodcastPlayer.text";
 import styles from "./PodcastPlayer.module.css";
 
 let activeMediaPodcastId: number | null = null;
+const PLAYBACK_STORAGE_PREFIX = "philo-ge:podcast-playback:";
+
+type SavedPlayback = {
+  audioPath: string;
+  position: number;
+  playbackRate: number;
+  savedAt: number;
+};
 
 type PodcastPlayerProps = {
   podcast: Podcast;
@@ -56,6 +64,78 @@ export function PodcastPlayer({ podcast, active, onActivate, compact = false }: 
       audio.removeEventListener("ended", markPaused);
     };
   }, [podcast.audio_path]);
+
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    const storageKey = `${PLAYBACK_STORAGE_PREFIX}${podcast.id}`;
+    let lastSavedAt = 0;
+    let restored = false;
+
+    const save = (force = false) => {
+      const now = Date.now();
+      if (!force && now - lastSavedAt < 5_000) return;
+      if (!Number.isFinite(audio.currentTime) || audio.currentTime <= 0) return;
+
+      try {
+        const playback: SavedPlayback = {
+          audioPath: podcast.audio_path,
+          position: audio.currentTime,
+          playbackRate: audio.playbackRate,
+          savedAt: now,
+        };
+        window.localStorage.setItem(storageKey, JSON.stringify(playback));
+        lastSavedAt = now;
+      } catch { /* Playback persistence is optional. */ }
+    };
+
+    const restore = () => {
+      if (restored) return;
+      restored = true;
+
+      try {
+        const value = window.localStorage.getItem(storageKey);
+        if (!value) return;
+        const playback = JSON.parse(value) as Partial<SavedPlayback>;
+        const validPosition = typeof playback.position === "number" && Number.isFinite(playback.position) && playback.position > 0;
+        const validRate = typeof playback.playbackRate === "number" && Number.isFinite(playback.playbackRate) && playback.playbackRate >= 0.5 && playback.playbackRate <= 4;
+
+        if (playback.audioPath !== podcast.audio_path || !validPosition || !Number.isFinite(audio.duration) || playback.position! >= audio.duration - 5) {
+          window.localStorage.removeItem(storageKey);
+          return;
+        }
+
+        audio.currentTime = playback.position!;
+        setCurrentTime(playback.position!);
+        if (validRate) audio.playbackRate = playback.playbackRate!;
+      } catch {
+        window.localStorage.removeItem(storageKey);
+      }
+    };
+
+    const finish = () => {
+      try { window.localStorage.removeItem(storageKey); } catch { /* Playback persistence is optional. */ }
+    };
+    const saveForced = () => save(true);
+    const savePeriodic = () => save();
+
+    audio.addEventListener("loadedmetadata", restore);
+    audio.addEventListener("timeupdate", savePeriodic);
+    audio.addEventListener("pause", saveForced);
+    audio.addEventListener("ended", finish);
+    window.addEventListener("pagehide", saveForced);
+    if (audio.readyState >= HTMLMediaElement.HAVE_METADATA) restore();
+
+    return () => {
+      save(true);
+      audio.removeEventListener("loadedmetadata", restore);
+      audio.removeEventListener("timeupdate", savePeriodic);
+      audio.removeEventListener("pause", saveForced);
+      audio.removeEventListener("ended", finish);
+      window.removeEventListener("pagehide", saveForced);
+    };
+  }, [podcast.audio_path, podcast.id]);
 
   useEffect(() => {
     const audio = audioRef.current;
