@@ -1,4 +1,4 @@
-import type { AdminCycle, AdminCycleSummary, AdminUser, AuthPayload, CycleInput, EventInput, Invitation, MediaImage, Podcast, PodcastPagination, PublicCycle, PublicEvent } from "./types";
+import type { AdminCycle, AdminCycleSummary, AdminUser, AuthPayload, CycleInput, EventInput, Invitation, MediaImage, Podcast, PodcastMetadataInput, PodcastPagination, PodcastPodcasterInput, PublicCycle, PublicEvent } from "./types";
 
 const DEFAULT_API_URL = import.meta.env.DEV ? "/api" : "https://api.philo-ge.ch";
 const API_URL = (import.meta.env.VITE_API_URL ?? DEFAULT_API_URL).replace(/\/$/, "");
@@ -130,6 +130,7 @@ export const api = {
     title: string,
     description: string,
     imagePath: string | null,
+    podcasters: PodcastPodcasterInput[],
     audio: File,
     csrfToken: string,
   ) => {
@@ -137,6 +138,7 @@ export const api = {
     body.append("title", title);
     body.append("description", description);
     body.append("image_path", imagePath ?? "");
+    body.append("podcasters", JSON.stringify(podcasters));
     body.append("audio", audio);
     return request<{ podcast: Podcast }>("/admin/podcasts.php", {
       method: "POST",
@@ -144,6 +146,13 @@ export const api = {
       body,
     });
   },
+
+  updatePodcast: (id: number, metadata: PodcastMetadataInput, csrfToken: string) =>
+    request<{ podcast: Podcast }>(`/admin/podcasts.php?id=${id}`, {
+      method: "PUT",
+      headers: { "X-CSRF-Token": csrfToken },
+      body: JSON.stringify(metadata),
+    }),
 
   deletePodcast: (id: number, csrfToken: string) =>
     request<{ status: "ok" }>(`/admin/podcasts.php?id=${id}`, {

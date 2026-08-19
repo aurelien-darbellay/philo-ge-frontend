@@ -1,44 +1,18 @@
-import { useState } from "react";
 import { Link } from "react-router-dom";
 import { FeaturedEncounter } from "../../components/landing/FeaturedEncounter/FeaturedEncounter";
 import { ManifestoSection } from "../../components/landing/ManifestoSection/ManifestoSection";
-import { BrandMark } from "../../components/ui/BrandMark/BrandMark";
-import { LanguageSelector } from "../../components/ui/LanguageSelector/LanguageSelector";
+import { PublicHeader } from "../../components/public/PublicHeader/PublicHeader";
 import { useText } from "../../i18n/useText";
 import { landingPageText } from "./LandingPage.text";
 import styles from "./LandingPage.module.css";
 
 export function LandingPage() {
   const text = useText(landingPageText);
-  const [menuOpen, setMenuOpen] = useState(false);
-  const closeMenu = () => setMenuOpen(false);
 
   return (
     <div className={styles.page}>
       <a className={styles.skipLink} href="#main">{text.skipToContent}</a>
-      <header className={styles.header}>
-        <Link className={styles.brand} to="/" aria-label={text.brand}><BrandMark compact /></Link>
-        <nav id="landing-navigation" className={`${styles.navigation} ${menuOpen ? styles.navigationOpen : ""}`} aria-label={text.navigationLabel}>
-          <Link to="/programme" onClick={closeMenu}>{text.program}</Link>
-          <Link to="/podcasts" onClick={closeMenu}>{text.podcasts}</Link>
-          <a href="#association" onClick={closeMenu}>{text.about}</a>
-          <Link to="/archives" onClick={closeMenu}>{text.archives}</Link>
-          <Link className={styles.memberLink} to="/login" onClick={closeMenu}>{text.memberSpace}</Link>
-        </nav>
-        <div className={styles.languageControl}><LanguageSelector /></div>
-        <button
-          className={`${styles.menuButton} ${menuOpen ? styles.menuButtonOpen : ""}`}
-          type="button"
-          aria-controls="landing-navigation"
-          aria-expanded={menuOpen}
-          aria-label={menuOpen ? text.closeMenu : text.openMenu}
-          onClick={() => setMenuOpen((open) => !open)}
-        >
-          <span aria-hidden="true" />
-          <span aria-hidden="true" />
-          <span aria-hidden="true" />
-        </button>
-      </header>
+      <PublicHeader />
 
       <main id="main">
         <div className={styles.main}>

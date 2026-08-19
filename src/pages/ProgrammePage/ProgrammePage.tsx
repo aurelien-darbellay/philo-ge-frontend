@@ -1,9 +1,7 @@
 import { useMemo, useState } from "react";
-import { Link } from "react-router-dom";
 import { EventShelf } from "../../components/programme/EventShelf/EventShelf";
 import { CycleRow } from "../../components/programme/CycleRow/CycleRow";
-import { BrandMark } from "../../components/ui/BrandMark/BrandMark";
-import { LanguageSelector } from "../../components/ui/LanguageSelector/LanguageSelector";
+import { PublicHeader } from "../../components/public/PublicHeader/PublicHeader";
 import { useProgramme } from "../../hooks/useProgramme";
 import { useText } from "../../i18n/useText";
 import { normalizeSearchValue } from "../../utils/normalizeSearchValue";
@@ -32,7 +30,7 @@ export function ProgrammePage() {
   const hasResults = filteredCycles.length > 0 || filteredStandaloneEvents.length > 0;
 
   return <div className={styles.page}>
-    <header className={styles.header}><Link to="/" aria-label={text.brand}><BrandMark compact /></Link><div className={styles.headerActions}><Link to="/">{text.back}</Link><Link to="/podcasts">{text.podcasts}</Link><Link to="/archives">{text.archives}</Link><LanguageSelector /></div></header>
+    <PublicHeader />
     <main className={styles.main}>
       <div className={styles.heading}>
         <h1 className={styles.pageTitle}>{text.title}</h1>

@@ -3,9 +3,8 @@ import { Link, useSearchParams } from "react-router-dom";
 import defaultArtwork from "../../assets/brand/GGPh_Avatar_Insta_FB copie.jpg";
 import { api, apiAssetUrl } from "../../api";
 import { usePodcastPlayback } from "../../components/podcasts/PodcastPlayer/PodcastPlaybackContext";
-import { BrandMark } from "../../components/ui/BrandMark/BrandMark";
+import { PublicHeader } from "../../components/public/PublicHeader/PublicHeader";
 import { Button } from "../../components/ui/Button/Button";
-import { LanguageSelector } from "../../components/ui/LanguageSelector/LanguageSelector";
 import { useText } from "../../i18n/useText";
 import type { Podcast, PodcastPagination } from "../../types";
 import { podcastsPageText } from "./PodcastsPage.text";
@@ -38,18 +37,20 @@ export function PodcastsPage() {
   const pageLabel = text.page.replace("{page}", String(pagination.page)).replace("{pages}", String(pagination.pages));
 
   return <div className={styles.page}>
-    <header className={styles.header}><Link to="/" aria-label={text.brand}><BrandMark compact /></Link><div className={styles.headerActions}><Link to="/">{text.home}</Link><Link to="/programme">{text.programme}</Link><LanguageSelector /></div></header>
+    <PublicHeader />
     <main className={styles.main}>
       <div className={styles.heading}><h1>{text.title}</h1><p>{text.introduction}</p></div>
       {loading && <p className={styles.state} aria-live="polite">{text.loading}</p>}
       {failed && <div className={styles.state}><h2>{text.errorTitle}</h2><p>{text.errorBody}</p></div>}
       {!loading && !failed && podcasts.length === 0 && <p className={styles.state}>{text.empty}</p>}
-      {!loading && !failed && podcasts.length > 0 && <div className={styles.list}>{podcasts.map((podcast) => <article className={styles.episode} key={podcast.id}>
-        <img className={styles.cover} src={podcast.image_path ? apiAssetUrl(podcast.image_path) : defaultArtwork} alt="" />
-        <div className={styles.content}>
-          <h2><Link className={styles.titleLink} to={`/podcasts/${podcast.id}`} aria-label={text.episodeLink.replace("{title}", podcast.title)}>{podcast.title}</Link></h2>
-          <Button className={styles.listen} type="button" onClick={() => openPodcast(podcast)}>{text.listen}</Button>
+      {!loading && !failed && podcasts.length > 0 && <div className={styles.list}>{podcasts.map((podcast) => <article className={styles.podcast} key={podcast.id}>
+        <div className={styles.artwork}>
+          <Link to={`/podcasts/${podcast.id}`} aria-label={text.episodeLink.replace("{title}", podcast.title)}><img src={podcast.image_path ? apiAssetUrl(podcast.image_path) : defaultArtwork} alt="" /></Link>
+          <span className={styles.headphones} aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4 13v-1a8 8 0 0 1 16 0v1M6.5 12.5H5a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h1.5v-7Zm11 0H19a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2h-1.5v-7Z" /></svg></span>
         </div>
+        <h2><Link className={styles.titleLink} to={`/podcasts/${podcast.id}`} aria-label={text.episodeLink.replace("{title}", podcast.title)}>{podcast.title}</Link></h2>
+        {podcast.podcasters.length > 0 && <p className={styles.podcasters}>{podcast.podcasters.map((podcaster) => podcaster.name).join(", ")}</p>}
+        <Button className={styles.listen} type="button" onClick={() => openPodcast(podcast)}>{text.listen}</Button>
       </article>)}</div>}
       {!loading && !failed && pagination.pages > 1 && <nav className={styles.pagination} aria-label={text.title}>
         {pagination.page > 1 ? <Link to={`/podcasts?page=${pagination.page - 1}`}>← {text.previous}</Link> : <span className={styles.disabled}>{text.previous}</span>}

@@ -40,6 +40,25 @@ export type Podcast = {
   file_size: number;
   published_at: string;
   created_at: string;
+  podcasters: PodcastPodcaster[];
+};
+
+export type PodcastPodcasterRole = "facilitator" | "speaker";
+
+export type PodcastPodcaster = {
+  id: number;
+  name: string;
+  role: PodcastPodcasterRole;
+  display_order: number;
+};
+
+export type PodcastPodcasterInput = Pick<PodcastPodcaster, "name" | "role">;
+
+export type PodcastMetadataInput = {
+  title: string;
+  description: string | null;
+  image_path: string | null;
+  podcasters: PodcastPodcasterInput[];
 };
 
 export type PodcastPagination = {

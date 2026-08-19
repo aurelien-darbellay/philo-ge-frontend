@@ -1,7 +1,6 @@
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { apiAssetUrl } from "../../api";
-import { BrandMark } from "../../components/ui/BrandMark/BrandMark";
-import { LanguageSelector } from "../../components/ui/LanguageSelector/LanguageSelector";
+import { PublicHeader } from "../../components/public/PublicHeader/PublicHeader";
 import { MarkdownContent } from "../../components/ui/MarkdownContent/MarkdownContent";
 import { usePublicEvent } from "../../hooks/usePublicEvent";
 import { useLanguage } from "../../i18n/LanguageContext";
@@ -44,11 +43,9 @@ export function EventPage() {
 
   return (
     <div className={styles.page}>
-      <header className={styles.header}>
-        <Link to="/" aria-label={text.brand}><BrandMark compact /></Link>
-        <div className={styles.headerActions}><button type="button" onClick={() => navigate(-1)}>{text.back}</button><LanguageSelector /></div>
-      </header>
+      <PublicHeader />
       <main>
+        <button className={styles.back} type="button" onClick={() => navigate(-1)}>← {text.back}</button>
         <section className={styles.hero}>
           <div className={styles.heading}>
             <p className={styles.eyebrow}>{event.cycle ? `${text.cycle} · ${event.cycle.title}` : text.event}</p>

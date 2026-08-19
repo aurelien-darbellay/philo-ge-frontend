@@ -3,12 +3,12 @@ import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import defaultArtwork from "../../assets/brand/GGPh_Avatar_Insta_FB copie.jpg";
 import { api, apiAssetUrl } from "../../api";
 import { useAuth } from "../../AuthContext";
-import { PodcastPlayer } from "../../components/podcasts/PodcastPlayer/PodcastPlayer";
+import { usePodcastPlayback } from "../../components/podcasts/PodcastPlayer/PodcastPlaybackContext";
 import { Alert } from "../../components/ui/Alert/Alert";
 import { Button, ButtonLink } from "../../components/ui/Button/Button";
 import { PageHeader } from "../../components/ui/PageHeader/PageHeader";
 import { useLanguage } from "../../i18n/LanguageContext";
-import { languageLocales } from "../../i18n/textMap";
+import { defineTextMap, languageLocales } from "../../i18n/textMap";
 import { useText } from "../../i18n/useText";
 import { AppShell } from "../../layouts/AppShell/AppShell";
 import type { Podcast, PodcastPagination } from "../../types";
@@ -16,9 +16,12 @@ import { adminPodcastsPageText } from "./AdminPodcastsPage.text";
 import styles from "./AdminPodcastsPage.module.css";
 
 const emptyPagination: PodcastPagination = { page: 1, limit: 20, total: 0, pages: 0 };
+const actionText = defineTextMap({ fr: { listen: "Écouter", edit: "Modifier" }, de: { listen: "Anhören", edit: "Bearbeiten" }, it: { listen: "Ascolta", edit: "Modifica" }, en: { listen: "Listen", edit: "Edit" } });
 
 export function AdminPodcastsPage() {
   const text = useText(adminPodcastsPageText);
+  const playerText = useText(actionText);
+  const { openPodcast } = usePodcastPlayback();
   const { language } = useLanguage();
   const { csrfToken } = useAuth();
   const navigate = useNavigate();
@@ -27,7 +30,6 @@ export function AdminPodcastsPage() {
   const page = /^[1-9][0-9]*$/.test(requestedPage) ? Number(requestedPage) : 1;
   const [podcasts, setPodcasts] = useState<Podcast[]>([]);
   const [pagination, setPagination] = useState<PodcastPagination>(emptyPagination);
-  const [activePodcastId, setActivePodcastId] = useState<number | null>(null);
   const [pendingPodcastId, setPendingPodcastId] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -71,8 +73,7 @@ export function AdminPodcastsPage() {
     {loading ? <p className={styles.state}>{text.loading}</p> : podcasts.length === 0 ? <p className={styles.state}>{text.empty}</p> : <div className={styles.list}>{podcasts.map((podcast) => <article className={styles.row} key={podcast.id}>
       <img className={styles.cover} src={podcast.image_path ? apiAssetUrl(podcast.image_path) : defaultArtwork} alt="" />
       <div className={styles.info}><h2>{podcast.title}</h2><p>{text.published} {dateFormatter.format(new Date(podcast.published_at))} · {sizeFormatter.format(podcast.file_size / 1_000_000)} {text.megabytes}</p></div>
-      <div className={styles.player}><PodcastPlayer podcast={podcast} active={activePodcastId === podcast.id} onActivate={setActivePodcastId} compact /></div>
-      <div className={styles.actions}><Button variant="danger" disabled={pendingPodcastId === podcast.id} onClick={() => deletePodcast(podcast)}>{text.delete}</Button></div>
+      <div className={styles.actions}><Button variant="secondary" onClick={() => openPodcast(podcast)}>{playerText.listen}</Button><ButtonLink to={`/admin/podcasts/${podcast.id}/edit`} variant="secondary">{playerText.edit}</ButtonLink><Button variant="danger" disabled={pendingPodcastId === podcast.id} onClick={() => deletePodcast(podcast)}>{text.delete}</Button></div>
     </article>)}</div>}
     {!loading && pagination.pages > 1 && <nav className={styles.pagination} aria-label={text.title}>
       <span>{pagination.page > 1 && <Link to={`/admin/podcasts?page=${pagination.page - 1}`}>← {text.previous}</Link>}</span>

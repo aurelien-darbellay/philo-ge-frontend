@@ -1,7 +1,6 @@
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { CycleRow } from "../../components/programme/CycleRow/CycleRow";
-import { BrandMark } from "../../components/ui/BrandMark/BrandMark";
-import { LanguageSelector } from "../../components/ui/LanguageSelector/LanguageSelector";
+import { PublicHeader } from "../../components/public/PublicHeader/PublicHeader";
 import { usePublicCycle } from "../../hooks/usePublicCycle";
 import { useText } from "../../i18n/useText";
 import { cyclePageText } from "./CyclePage.text";
@@ -24,11 +23,9 @@ export function CyclePage() {
   }
 
   return <div className={styles.page}>
-    <header className={styles.header}>
-      <Link to="/" aria-label={text.brand}><BrandMark compact /></Link>
-      <div className={styles.headerActions}><button type="button" onClick={() => navigate(-1)}>{text.back}</button><LanguageSelector /></div>
-    </header>
+    <PublicHeader />
     <main className={styles.main}>
+      <button className={styles.back} type="button" onClick={() => navigate(-1)}>← {text.back}</button>
       <section className={styles.introduction}>
         <div>
           <p className={styles.eyebrow}>{text.cycle}</p>

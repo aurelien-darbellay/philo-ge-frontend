@@ -1,9 +1,7 @@
 import { useMemo, useState } from "react";
-import { Link } from "react-router-dom";
 import { CycleShelf } from "../../components/archives/CycleShelf/CycleShelf";
 import { EventShelf } from "../../components/programme/EventShelf/EventShelf";
-import { BrandMark } from "../../components/ui/BrandMark/BrandMark";
-import { LanguageSelector } from "../../components/ui/LanguageSelector/LanguageSelector";
+import { PublicHeader } from "../../components/public/PublicHeader/PublicHeader";
 import { useArchives } from "../../hooks/useArchives";
 import { useText } from "../../i18n/useText";
 import type { PublicEvent } from "../../types";
@@ -40,7 +38,7 @@ export function ArchivesPage() {
   const empty = !loading && !failed && !invalidRange && !hasArchive;
 
   return <div className={styles.page}>
-    <header className={styles.header}><Link to="/" aria-label={text.brand}><BrandMark compact /></Link><div className={styles.headerActions}><Link to="/">{text.back}</Link><Link to="/programme">{text.programme}</Link><Link to="/podcasts">{text.podcasts}</Link><LanguageSelector /></div></header>
+    <PublicHeader />
     <main className={styles.main}>
       <div className={styles.heading}>
         <div><h1>{text.title}</h1><p>{text.introduction}</p></div>
