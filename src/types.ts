@@ -30,6 +30,25 @@ export type MediaImage = {
   modified_at: string;
 };
 
+export type Podcast = {
+  id: number;
+  title: string;
+  description: string | null;
+  image_path: string | null;
+  audio_path: string;
+  mime_type: string;
+  file_size: number;
+  published_at: string;
+  created_at: string;
+};
+
+export type PodcastPagination = {
+  page: number;
+  limit: number;
+  total: number;
+  pages: number;
+};
+
 export type ContentStatus = "draft" | "published" | "cancelled";
 
 export type EventSpeaker = {

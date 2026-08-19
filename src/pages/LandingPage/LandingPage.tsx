@@ -20,6 +20,7 @@ export function LandingPage() {
         <Link className={styles.brand} to="/" aria-label={text.brand}><BrandMark compact /></Link>
         <nav id="landing-navigation" className={`${styles.navigation} ${menuOpen ? styles.navigationOpen : ""}`} aria-label={text.navigationLabel}>
           <Link to="/programme" onClick={closeMenu}>{text.program}</Link>
+          <Link to="/podcasts" onClick={closeMenu}>{text.podcasts}</Link>
           <a href="#association" onClick={closeMenu}>{text.about}</a>
           <Link to="/archives" onClick={closeMenu}>{text.archives}</Link>
           <Link className={styles.memberLink} to="/login" onClick={closeMenu}>{text.memberSpace}</Link>

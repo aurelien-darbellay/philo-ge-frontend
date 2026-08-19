@@ -1,6 +1,7 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { AuthProvider } from "../../AuthContext";
 import { LandingFooter } from "../../components/landing/LandingFooter/LandingFooter";
+import { PodcastPlaybackProvider } from "../../components/podcasts/PodcastPlayer/PodcastPlaybackContext";
 import { LanguageProvider } from "../../i18n/LanguageContext";
 import { AcceptInvitationPage } from "../../pages/AcceptInvitationPage/AcceptInvitationPage";
 import { ArchivesPage } from "../../pages/ArchivesPage/ArchivesPage";
@@ -11,13 +12,17 @@ import { AdminMediaPage } from "../../pages/AdminMediaPage/AdminMediaPage";
 import { AdminEventsPage } from "../../pages/AdminEventsPage/AdminEventsPage";
 import { AdminEventFormPage } from "../../pages/AdminEventFormPage/AdminEventFormPage";
 import { AdminUsersPage } from "../../pages/AdminUsersPage/AdminUsersPage";
+import { AdminPodcastsPage } from "../../pages/AdminPodcastsPage/AdminPodcastsPage";
+import { AdminPodcastFormPage } from "../../pages/AdminPodcastFormPage/AdminPodcastFormPage";
 import { DashboardPage } from "../../pages/DashboardPage/DashboardPage";
 import { CyclePage } from "../../pages/CyclePage/CyclePage";
 import { EventPage } from "../../pages/EventPage/EventPage";
 import { LandingPage } from "../../pages/LandingPage/LandingPage";
 import { LoginPage } from "../../pages/LoginPage/LoginPage";
 import { ProgrammePage } from "../../pages/ProgrammePage/ProgrammePage";
+import { PodcastPage } from "../../pages/PodcastPage/PodcastPage";
+import { PodcastsPage } from "../../pages/PodcastsPage/PodcastsPage";
 import { ProtectedRoute } from "../../routing/ProtectedRoute/ProtectedRoute";
 import { ScrollToTop } from "../../routing/ScrollToTop/ScrollToTop";
 import styles from "./App.module.css";
-export default function App() { return <LanguageProvider><BrowserRouter><ScrollToTop /><AuthProvider><div className={styles.app}><div className={styles.routeContent}><Routes><Route path="/" element={<LandingPage />} /><Route path="/programme" element={<ProgrammePage />} /><Route path="/archives" element={<ArchivesPage />} /><Route path="/cycles/:cycleId" element={<CyclePage />} /><Route path="/evenements/:eventId" element={<EventPage />} /><Route path="/login" element={<LoginPage />} /><Route path="/accept-invitation" element={<AcceptInvitationPage />} /><Route element={<ProtectedRoute />}><Route path="/espace-membre" element={<DashboardPage />} /></Route><Route element={<ProtectedRoute admin />}><Route path="/admin/events" element={<AdminEventsPage />} /><Route path="/admin/events/new" element={<AdminEventFormPage />} /><Route path="/admin/events/:eventId/edit" element={<AdminEventFormPage />} /><Route path="/admin/cycles" element={<AdminCyclesPage />} /><Route path="/admin/cycles/new" element={<AdminCycleFormPage />} /><Route path="/admin/cycles/:cycleId/edit" element={<AdminCycleFormPage />} /><Route path="/admin/media" element={<AdminMediaPage />} /><Route path="/admin/invitations" element={<AdminInvitationsPage />} /><Route path="/admin/users" element={<AdminUsersPage />} /></Route><Route path="*" element={<Navigate to="/" replace />} /></Routes></div><LandingFooter /></div></AuthProvider></BrowserRouter></LanguageProvider>; }
+export default function App() { return <LanguageProvider><BrowserRouter><ScrollToTop /><AuthProvider><PodcastPlaybackProvider><div className={styles.app}><div className={styles.routeContent}><Routes><Route path="/" element={<LandingPage />} /><Route path="/programme" element={<ProgrammePage />} /><Route path="/archives" element={<ArchivesPage />} /><Route path="/podcasts" element={<PodcastsPage />} /><Route path="/podcasts/:podcastId" element={<PodcastPage />} /><Route path="/cycles/:cycleId" element={<CyclePage />} /><Route path="/evenements/:eventId" element={<EventPage />} /><Route path="/login" element={<LoginPage />} /><Route path="/accept-invitation" element={<AcceptInvitationPage />} /><Route element={<ProtectedRoute />}><Route path="/espace-membre" element={<DashboardPage />} /></Route><Route element={<ProtectedRoute admin />}><Route path="/admin/events" element={<AdminEventsPage />} /><Route path="/admin/events/new" element={<AdminEventFormPage />} /><Route path="/admin/events/:eventId/edit" element={<AdminEventFormPage />} /><Route path="/admin/cycles" element={<AdminCyclesPage />} /><Route path="/admin/cycles/new" element={<AdminCycleFormPage />} /><Route path="/admin/cycles/:cycleId/edit" element={<AdminCycleFormPage />} /><Route path="/admin/podcasts" element={<AdminPodcastsPage />} /><Route path="/admin/podcasts/new" element={<AdminPodcastFormPage />} /><Route path="/admin/media" element={<AdminMediaPage />} /><Route path="/admin/invitations" element={<AdminInvitationsPage />} /><Route path="/admin/users" element={<AdminUsersPage />} /></Route><Route path="*" element={<Navigate to="/" replace />} /></Routes></div><LandingFooter /></div></PodcastPlaybackProvider></AuthProvider></BrowserRouter></LanguageProvider>; }

@@ -1,0 +1,45 @@
+.player {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  position: relative;
+  gap: var(--space-3) var(--space-4);
+  width: 100%;
+  max-width: var(--form-width-wide);
+  margin-inline: auto;
+  padding: var(--space-5);
+  border: 1px solid var(--color-ink);
+  border-radius: var(--radius-md);
+  background: var(--color-ink);
+  box-shadow: var(--shadow-card);
+  color: var(--color-on-dark);
+}
+.player::before { content: ""; position: absolute; inset: 5px; border: 1px solid var(--color-motif-blue); border-radius: var(--radius-sm); pointer-events: none; }
+.compact { max-width: 24rem; }
+.audio { display: none; }
+.titleDisplay { width: calc(100% - (var(--space-12) * 2)); min-width: 0; grid-column: 1 / -1; grid-row: 1; justify-self: center; overflow: hidden; padding: var(--space-2) 0; border-block: 1px solid rgb(255 255 255 / 20%); color: var(--color-on-dark); font-size: var(--font-size-sm); white-space: nowrap; }
+.titleDisplay span { min-width: max-content; display: inline-block; padding-left: 100%; animation: titleScroll 14s linear infinite; }
+.titleDisplay:hover span { animation-play-state: paused; }
+@keyframes titleScroll { from { transform: translateX(0); } to { transform: translateX(-100%); } }
+.commands { position: absolute; left: 50%; top: 50%; display: flex; align-items: center; justify-content: center; gap: var(--space-3); transform: translate(-50%, calc(-50% - var(--space-1))); }
+.command { min-width: var(--space-12); padding: var(--space-2) var(--space-3); border: 0; border-radius: var(--radius-sm); background: transparent; color: var(--color-on-dark); }
+.command:not(.play) { width: calc(var(--space-12) - var(--space-2)); min-width: calc(var(--space-12) - var(--space-2)); height: calc(var(--space-12) - var(--space-2)); flex: 0 0 calc(var(--space-12) - var(--space-2)); padding: 0; border: 1px solid var(--color-motif-red); border-radius: 50%; }
+.play { width: calc(var(--space-12) - var(--space-2)); min-width: calc(var(--space-12) - var(--space-2)); height: calc(var(--space-12) - var(--space-2)); flex: 0 0 calc(var(--space-12) - var(--space-2)); padding: 0; border-radius: var(--radius-sm); background: var(--color-on-dark); color: var(--color-ink); font-size: var(--font-size-lg); }
+.speedGroup { grid-column: 2; grid-row: 1; display: flex; align-items: center; gap: var(--space-2); color: var(--color-on-dark); font-size: var(--font-size-sm); }
+.speed { padding: var(--space-2) var(--space-1) var(--space-2) 0; border: 0; border-radius: var(--radius-sm); background: var(--color-ink); color: var(--color-on-dark); font: inherit; text-align: right; }
+.speed:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+.times { grid-column: 1 / -1; grid-row: 2; min-height: var(--space-12); position: relative; display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); padding: var(--space-3) 0; border: 0; background: transparent; color: var(--color-on-dark); font-variant-numeric: tabular-nums; font-size: var(--font-size-sm); letter-spacing: var(--letter-spacing-label); }
+.times > span:last-child { justify-self: end; }
+.progress { grid-column: 1 / -1; grid-row: 3; width: 100%; margin: 0; accent-color: var(--color-on-dark); cursor: pointer; }
+.progress::-webkit-slider-runnable-track { border-radius: var(--radius-pill); background: rgb(255 255 255 / 28%); }
+.progress::-moz-range-track { border-radius: var(--radius-pill); background: rgb(255 255 255 / 28%); }
+.progress::-moz-range-progress { border-radius: var(--radius-pill); background: var(--color-on-dark); }
+.progress:disabled { cursor: not-allowed; opacity: .55; }
+
+@media (max-width: 47.5rem) {
+  .player { grid-template-columns: minmax(0, 1fr) auto; padding: var(--space-4); }
+  .titleDisplay { width: auto; grid-column: 1; grid-row: 1; justify-self: stretch; }
+  .speedGroup { grid-column: 2; grid-row: 1; justify-self: end; }
+  .times { grid-column: 1 / -1; grid-row: 2; gap: var(--space-2); }
+  .progress { grid-column: 1 / -1; grid-row: 3; }
+}
+@media (prefers-reduced-motion: reduce) { .titleDisplay span { min-width: 0; display: block; overflow: hidden; padding-left: 0; animation: none; text-overflow: ellipsis; } }

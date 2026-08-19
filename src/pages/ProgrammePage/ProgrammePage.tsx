@@ -32,7 +32,7 @@ export function ProgrammePage() {
   const hasResults = filteredCycles.length > 0 || filteredStandaloneEvents.length > 0;
 
   return <div className={styles.page}>
-    <header className={styles.header}><Link to="/" aria-label={text.brand}><BrandMark compact /></Link><div className={styles.headerActions}><Link to="/">{text.back}</Link><Link to="/archives">{text.archives}</Link><LanguageSelector /></div></header>
+    <header className={styles.header}><Link to="/" aria-label={text.brand}><BrandMark compact /></Link><div className={styles.headerActions}><Link to="/">{text.back}</Link><Link to="/podcasts">{text.podcasts}</Link><Link to="/archives">{text.archives}</Link><LanguageSelector /></div></header>
     <main className={styles.main}>
       <div className={styles.heading}>
         <h1 className={styles.pageTitle}>{text.title}</h1>

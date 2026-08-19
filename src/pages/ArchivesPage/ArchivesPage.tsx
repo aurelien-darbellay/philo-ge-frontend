@@ -40,7 +40,7 @@ export function ArchivesPage() {
   const empty = !loading && !failed && !invalidRange && !hasArchive;
 
   return <div className={styles.page}>
-    <header className={styles.header}><Link to="/" aria-label={text.brand}><BrandMark compact /></Link><div className={styles.headerActions}><Link to="/">{text.back}</Link><Link to="/programme">{text.programme}</Link><LanguageSelector /></div></header>
+    <header className={styles.header}><Link to="/" aria-label={text.brand}><BrandMark compact /></Link><div className={styles.headerActions}><Link to="/">{text.back}</Link><Link to="/programme">{text.programme}</Link><Link to="/podcasts">{text.podcasts}</Link><LanguageSelector /></div></header>
     <main className={styles.main}>
       <div className={styles.heading}>
         <div><h1>{text.title}</h1><p>{text.introduction}</p></div>

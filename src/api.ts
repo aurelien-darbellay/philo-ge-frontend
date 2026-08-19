@@ -1,6 +1,7 @@
-import type { AdminCycle, AdminCycleSummary, AdminUser, AuthPayload, CycleInput, EventInput, Invitation, MediaImage, PublicCycle, PublicEvent } from "./types";
+import type { AdminCycle, AdminCycleSummary, AdminUser, AuthPayload, CycleInput, EventInput, Invitation, MediaImage, Podcast, PodcastPagination, PublicCycle, PublicEvent } from "./types";
 
-const API_URL = (import.meta.env.VITE_API_URL ?? "http://localhost:8080").replace(/\/$/, "");
+const DEFAULT_API_URL = import.meta.env.DEV ? "/api" : "https://api.philo-ge.ch";
+const API_URL = (import.meta.env.VITE_API_URL ?? DEFAULT_API_URL).replace(/\/$/, "");
 
 export function apiAssetUrl(path: string): string {
   return `${API_URL}${path}`;
@@ -104,6 +105,48 @@ export const api = {
 
   deleteMediaImage: (filename: string, csrfToken: string) =>
     request<{ status: "ok" }>(`/admin/media/images.php?filename=${encodeURIComponent(filename)}`, {
+      method: "DELETE",
+      headers: { "X-CSRF-Token": csrfToken },
+    }),
+
+  podcasts: (page = 1, limit = 20) =>
+    request<{ podcasts: Podcast[]; pagination: PodcastPagination }>(
+      `/podcasts.php?page=${page}&limit=${limit}`,
+    ),
+
+  podcast: (id: number) => request<{ podcast: Podcast }>(`/podcasts.php?id=${id}`),
+
+  uploadPodcastImage: (image: File, csrfToken: string) => {
+    const body = new FormData();
+    body.append("image", image);
+    return request<{ image_path: string }>("/admin/podcasts/image.php", {
+      method: "POST",
+      headers: { "X-CSRF-Token": csrfToken },
+      body,
+    });
+  },
+
+  createPodcast: (
+    title: string,
+    description: string,
+    imagePath: string | null,
+    audio: File,
+    csrfToken: string,
+  ) => {
+    const body = new FormData();
+    body.append("title", title);
+    body.append("description", description);
+    body.append("image_path", imagePath ?? "");
+    body.append("audio", audio);
+    return request<{ podcast: Podcast }>("/admin/podcasts.php", {
+      method: "POST",
+      headers: { "X-CSRF-Token": csrfToken },
+      body,
+    });
+  },
+
+  deletePodcast: (id: number, csrfToken: string) =>
+    request<{ status: "ok" }>(`/admin/podcasts.php?id=${id}`, {
       method: "DELETE",
       headers: { "X-CSRF-Token": csrfToken },
     }),

@@ -14,6 +14,7 @@ export function LandingFooter() {
           <nav>
             <a href="mailto:contact@philo-ge.ch">{text.contact}</a>
             <Link to="/archives">{text.archiveLabel}</Link>
+            <Link to="/podcasts">{text.podcasts}</Link>
             <Link to="/login">{text.memberSpace}</Link>
           </nav>
           <nav>
