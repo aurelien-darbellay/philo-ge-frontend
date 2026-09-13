@@ -45,6 +45,8 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
 export const api = {
   becomeMemberContent: () => request<{ content: BecomeMemberContent }>("/become-member-content.php"),
 
+  organizationProfile: () => request<{ profile: OrganizationProfile }>("/organization-profile.php"),
+
   adminBecomeMemberContent: () => request<{ content: BecomeMemberContent }>("/admin/become-member-content.php"),
 
   updateAdminBecomeMemberContent: (content: BecomeMemberContent, csrfToken: string) =>

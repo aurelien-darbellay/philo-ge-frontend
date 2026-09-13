@@ -1,7 +1,13 @@
-.footer { width: min(100%, calc(var(--page-width) + var(--page-gutter) + var(--page-gutter))); margin-inline: auto; padding: clamp(var(--space-8), 4vw, 3rem) var(--page-gutter) var(--space-6); position: relative; background: var(--color-background); color: var(--color-ink); }
+.footer { width: min(100%, calc(var(--page-width) + var(--page-gutter) + var(--page-gutter))); margin-inline: auto; padding: clamp(var(--space-4), 2.2vw, var(--space-6)) var(--page-gutter) var(--space-6); position: relative; background: var(--color-background); color: var(--color-ink); }
 .footer::before { content: ""; width: 100%; position: absolute; top: 0; left: 0; border-top: 1px solid var(--color-border); }
 .inner { width: min(100%, var(--page-width)); margin-inline: auto; }
-.links { padding-block: var(--space-8); display: grid; grid-template-columns: 1.4fr 0.7fr 0.7fr 0.7fr; gap: var(--space-8); align-items: start; }
-.links nav { display: flex; flex-direction: column; gap: var(--space-3); }.links a { color: var(--color-text-muted); font-size: var(--font-size-sm); text-decoration: none; }.links p { color: var(--color-text-muted); font-size: var(--font-size-sm); }
+.links { padding-block: var(--space-4); display: grid; grid-template-columns: auto 1fr; column-gap: var(--space-8); align-items: center; }
+.links a { color: var(--color-text-muted); font-size: var(--font-size-sm); text-decoration: none; }
+.inlineNav { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 0; }
+.inlineNav a { display: inline-flex; align-items: center; }
+.inlineNav a + a::before { content: "\00B7"; display: inline-block; margin-inline: var(--space-3); color: var(--color-text-muted); }
 .copyright { margin: 0; padding-top: var(--space-4); border-top: 1px solid var(--color-border); color: var(--color-text-muted); font-size: var(--font-size-xs); letter-spacing: var(--letter-spacing-label); text-transform: uppercase; }
-@media (max-width: 47.5rem) { .links { grid-template-columns: 1fr 1fr; }.links > :first-child, .links > :last-child { grid-column: 1 / -1; } }
+@media (max-width: 47.5rem) {
+	.links { grid-template-columns: 1fr; row-gap: var(--space-4); justify-items: center; align-items: center; }
+	.inlineNav { justify-content: center; }
+}
