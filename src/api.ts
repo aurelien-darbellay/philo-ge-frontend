@@ -82,6 +82,21 @@ export const api = {
       body: JSON.stringify({ email }),
     }),
 
+  newsletterEmails: () => request<{ emails: string[] }>("/admin/newsletter.php"),
+
+  adminAddNewsletterEmail: (email: string, csrfToken: string) =>
+    request<{ status: "ok" }>("/admin/newsletter.php", {
+      method: "POST",
+      headers: { "X-CSRF-Token": csrfToken },
+      body: JSON.stringify({ email }),
+    }),
+
+  adminDeleteNewsletterEmail: (email: string, csrfToken: string) =>
+    request<{ status: "ok" }>(`/admin/newsletter.php?email=${encodeURIComponent(email)}`, {
+      method: "DELETE",
+      headers: { "X-CSRF-Token": csrfToken },
+    }),
+
   login: (email: string, password: string, rememberMe: boolean) =>
     request<AuthPayload>("/auth/login.php", {
       method: "POST",
