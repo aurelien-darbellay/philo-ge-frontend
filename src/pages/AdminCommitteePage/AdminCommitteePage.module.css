@@ -1,0 +1,13 @@
+.page { width: min(100%, calc(var(--page-width) + var(--page-gutter) + var(--page-gutter))); margin-inline: auto; padding: var(--space-8) var(--page-gutter) var(--space-12); }
+.toolbar { margin: var(--space-8) 0 var(--space-6); display: flex; gap: var(--space-3); align-items: center; }
+.form { padding: var(--space-5); border: 1px solid var(--color-border); border-radius: var(--radius-md); background: var(--color-surface-solid); display: grid; grid-template-columns: minmax(0, 1fr) 14rem auto auto; gap: var(--space-3); align-items: end; margin-bottom: var(--space-6); }
+.tableCard { overflow: hidden; }
+.table { width: 100%; border-collapse: collapse; }
+.table th, .table td { text-align: left; padding: var(--space-4) var(--space-6); border-bottom: 1px solid var(--color-border); }
+.table th { font-size: var(--font-size-xs); letter-spacing: var(--letter-spacing-label); text-transform: uppercase; color: var(--color-text-subtle); background: var(--color-surface-muted); }
+.roleSelect { max-width: 100%; padding: var(--space-3); border: 1px solid var(--color-border-solid); border-radius: var(--radius-sm); background: var(--color-surface-solid); color: var(--color-ink); font: inherit; }
+.roleSelect:focus-visible { outline: 0; box-shadow: var(--focus-ring); }
+.roleSelect:disabled { opacity: .65; }
+.empty { padding: var(--space-12); text-align: center; color: var(--color-text-subtle); }
+@media (max-width: 60rem) { .form { grid-template-columns: 1fr; } }
+@media (max-width: 47.5rem) { .tableCard { overflow-x: auto; }.table { min-width: var(--page-width-narrow); } }

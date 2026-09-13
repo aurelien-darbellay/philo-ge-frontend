@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { api, ApiError } from "../../api";
 import paymentQr from "../../assets/QRCode.png";
 import academyLogo from "../../assets/SAHSS_Logo.jpg";
@@ -6,13 +6,55 @@ import { PublicHeader } from "../../components/public/PublicHeader/PublicHeader"
 import { Button } from "../../components/ui/Button/Button";
 import { TextField } from "../../components/ui/TextField/TextField";
 import { useText } from "../../i18n/useText";
+import type { CommitteeRole } from "../../types";
 import { supportPageText } from "./SupportPage.text";
 import styles from "./SupportPage.module.css";
 
 export function SupportPage() {
   const text = useText(supportPageText);
+  const [committeeMembers, setCommitteeMembers] = useState<{ id: number; full_name: string; role: CommitteeRole }[]>([]);
+  const [committeeLoading, setCommitteeLoading] = useState(true);
+  const [committeeFailed, setCommitteeFailed] = useState(false);
   const [email, setEmail] = useState("");
   const [subscriptionState, setSubscriptionState] = useState<"idle" | "submitting" | "success" | "error" | "invalid">("idle");
+
+  useEffect(() => {
+    let active = true;
+    void api.committeeMembers()
+      .then((response) => {
+        if (!active) return;
+        setCommitteeMembers(response.members);
+        setCommitteeFailed(false);
+      })
+      .catch(() => {
+        if (!active) return;
+        setCommitteeMembers([]);
+        setCommitteeFailed(true);
+      })
+      .finally(() => {
+        if (active) setCommitteeLoading(false);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const roleLabel = (role: CommitteeRole) => {
+    switch (role) {
+      case "treasurer":
+        return text.treasurer;
+      case "secretary":
+        return text.secretary;
+      case "president":
+        return text.president;
+      default:
+        return text.member;
+    }
+  };
+
+  const shouldShowRole = (role: CommitteeRole) => role !== "member";
+
   const submitting = subscriptionState === "submitting";
   const subscribe = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -26,12 +68,6 @@ export function SupportPage() {
       setSubscriptionState(error instanceof ApiError && error.status === 422 ? "invalid" : "error");
     }
   };
-  const members = [
-    { name: text.laurent }, { name: text.parwana, role: text.treasurer },
-    { name: text.janette }, { name: text.stefan }, { name: text.nathalie },
-    { name: text.lucie, role: text.president }, { name: text.mischa, role: text.secretary },
-    { name: text.daniel }, { name: text.clarisse },
-  ];
   return <div className={styles.page}>
     <a className={styles.skipLink} href="#support-main">{text.skip}</a>
     <PublicHeader />
@@ -42,7 +78,11 @@ export function SupportPage() {
       </div>
       <section className={styles.section} aria-labelledby="support-committee">
         <div className={styles.sectionHeading}><h2 id="support-committee">{text.committee}</h2><p>{text.committeeIntro}</p></div>
-        <ul className={styles.members}>{members.map(member => <li key={member.name}><span>{member.name}</span>{member.role && <>, <span className={styles.role}>{member.role}</span></>}</li>)}</ul>
+        {committeeLoading
+          ? <p>{text.committeeLoading}</p>
+          : committeeFailed
+            ? <p>{text.committeeError}</p>
+            : <ul className={styles.members}>{committeeMembers.map(member => <li key={member.id}><span>{member.full_name}</span>{shouldShowRole(member.role) && <>, <span className={styles.role}>{roleLabel(member.role)}</span></>}</li>)}</ul>}
       </section>
       <section className={styles.section} aria-labelledby="support-membership">
         <div className={styles.sectionHeading}><h2 id="support-membership">{text.membership}</h2><p>{text.funding}</p></div>

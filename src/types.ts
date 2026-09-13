@@ -30,6 +30,14 @@ export type MediaImage = {
   modified_at: string;
 };
 
+export type CommitteeRole = "treasurer" | "secretary" | "president" | "member";
+
+export type CommitteeMember = {
+  id: number;
+  full_name: string;
+  role: CommitteeRole;
+};
+
 export type Podcast = {
   id: number;
   title: string;

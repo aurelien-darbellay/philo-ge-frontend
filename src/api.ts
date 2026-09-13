@@ -1,4 +1,4 @@
-import type { AdminCycle, AdminCycleSummary, AdminUser, AuthPayload, CycleInput, EventInput, Invitation, MediaImage, Podcast, PodcastMetadataInput, PodcastPagination, PodcastPodcasterInput, PublicCycle, PublicEvent } from "./types";
+import type { AdminCycle, AdminCycleSummary, AdminUser, AuthPayload, CommitteeMember, CommitteeRole, CycleInput, EventInput, Invitation, MediaImage, Podcast, PodcastMetadataInput, PodcastPagination, PodcastPodcasterInput, PublicCycle, PublicEvent } from "./types";
 
 const DEFAULT_API_URL = import.meta.env.DEV ? "/api" : "https://api.philo-ge.ch";
 const API_URL = (import.meta.env.VITE_API_URL ?? DEFAULT_API_URL).replace(/\/$/, "");
@@ -43,6 +43,28 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
 }
 
 export const api = {
+  committeeMembers: () => request<{ members: CommitteeMember[] }>("/committee.php"),
+
+  adminAddCommitteeMember: (fullName: string, role: CommitteeRole, csrfToken: string) =>
+    request<{ member: CommitteeMember }>("/admin/committee.php", {
+      method: "POST",
+      headers: { "X-CSRF-Token": csrfToken },
+      body: JSON.stringify({ full_name: fullName, role }),
+    }),
+
+  adminDeleteCommitteeMember: (id: number, csrfToken: string) =>
+    request<{ status: "ok" }>(`/admin/committee.php?id=${id}`, {
+      method: "DELETE",
+      headers: { "X-CSRF-Token": csrfToken },
+    }),
+
+  adminChangeCommitteeMemberRole: (id: number, role: CommitteeRole, csrfToken: string) =>
+    request<{ member: CommitteeMember }>(`/admin/committee/role.php?id=${id}`, {
+      method: "PUT",
+      headers: { "X-CSRF-Token": csrfToken },
+      body: JSON.stringify({ role }),
+    }),
+
   subscribeNewsletter: (email: string) =>
     request<{ status: "ok" }>("/newsletter.php", {
       method: "POST",
