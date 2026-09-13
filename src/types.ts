@@ -38,6 +38,15 @@ export type CommitteeMember = {
   role: CommitteeRole;
 };
 
+export type BecomeMemberContent = {
+  intro_fr: string;
+  intro_de: string;
+  intro_it: string;
+  intro_en: string;
+  reg_quota: number;
+  reduce_quota: number;
+};
+
 export type Podcast = {
   id: number;
   title: string;
