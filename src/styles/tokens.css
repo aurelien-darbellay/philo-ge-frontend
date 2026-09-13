@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Playfair+Display:ital,wght@0,600;1,600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Lora:ital,wght@0,600;1,600&display=swap");
 
 :root {
   --color-ink: #172335;
@@ -14,8 +14,8 @@
   --color-motif-red: #ec5b5d;
   --color-motif-blue: #688aba;
   --color-motif-grey: #b0aea8;
-  --color-background: #f4f0e7;
-  --color-header: rgb(244 240 231 / 90%);
+  --color-background: #fffdf2;
+  --color-header: rgb(255 253 242 / 90%);
   --color-watermark: rgb(255 255 255 / 3.5%);
   --color-surface: rgb(255 255 255 / 72%);
   --color-surface-solid: #fffefa;
@@ -32,7 +32,7 @@
   --color-on-dark: #f8f3e8;
   --color-on-dark-muted: #c9d2dc;
   --font-body: "DM Sans", sans-serif;
-  --font-heading: "Playfair Display", serif;
+  --font-heading: "Lora", serif;
   --font-mark: Georgia, serif;
   --font-size-xs: 0.72rem;
   --font-size-caption: 0.78rem;

@@ -36,7 +36,7 @@ overrides.
 The page uses one continuous cream canvas:
 
 ```css
---color-background: #f4f0e7;
+--color-background: #fffdf2;
 ```
 
 Do not alternate large sections between light and dark backgrounds by default.
@@ -90,7 +90,7 @@ serif heading face. Use the existing font tokens:
 
 ```css
 --font-body: "DM Sans", sans-serif;
---font-heading: "Playfair Display", serif;
+--font-heading: "Lora", serif;
 ```
 
 Display headings may be large, but they must not dominate an entire viewport:
