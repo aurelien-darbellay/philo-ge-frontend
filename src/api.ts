@@ -1,4 +1,4 @@
-import type { AdminCycle, AdminCycleSummary, AdminUser, AuthPayload, BecomeMemberContent, CommitteeMember, CommitteeRole, CycleInput, EventInput, Invitation, MediaImage, Podcast, PodcastMetadataInput, PodcastPagination, PodcastPodcasterInput, PublicCycle, PublicEvent } from "./types";
+import type { AdminCycle, AdminCycleSummary, AdminUser, AuthPayload, BecomeMemberContent, CommitteeMember, CommitteeRole, CycleInput, EventInput, Invitation, MediaImage, OrganizationProfile, Podcast, PodcastMetadataInput, PodcastPagination, PodcastPodcasterInput, PublicCycle, PublicEvent } from "./types";
 
 const DEFAULT_API_URL = import.meta.env.DEV ? "/api" : "https://api.philo-ge.ch";
 const API_URL = (import.meta.env.VITE_API_URL ?? DEFAULT_API_URL).replace(/\/$/, "");
@@ -52,6 +52,15 @@ export const api = {
       method: "PUT",
       headers: { "X-CSRF-Token": csrfToken },
       body: JSON.stringify(content),
+    }),
+
+  adminOrganizationProfile: () => request<{ profile: OrganizationProfile }>("/admin/organization-profile.php"),
+
+  updateAdminOrganizationProfile: (profile: OrganizationProfile, csrfToken: string) =>
+    request<{ profile: OrganizationProfile }>("/admin/organization-profile.php", {
+      method: "PUT",
+      headers: { "X-CSRF-Token": csrfToken },
+      body: JSON.stringify(profile),
     }),
 
   committeeMembers: () => request<{ members: CommitteeMember[] }>("/committee.php"),

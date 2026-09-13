@@ -45,6 +45,15 @@ export type BecomeMemberContent = {
   intro_en: string;
   reg_quota: number;
   reduce_quota: number;
+  bank_account?: string | null;
+};
+
+export type OrganizationProfile = {
+  email: string;
+  instagram: string | null;
+  facebook: string | null;
+  bank_account: string;
+  address: string | null;
 };
 
 export type Podcast = {

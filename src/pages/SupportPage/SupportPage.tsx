@@ -89,6 +89,7 @@ export function SupportPage() {
   });
   const regularQuotaLabel = becomeMemberContent ? `${quotaFormatter.format(becomeMemberContent.reg_quota)} CHF` : text.standardAmount;
   const reducedQuotaLabel = becomeMemberContent ? `${quotaFormatter.format(becomeMemberContent.reduce_quota)} CHF` : text.reducedAmount;
+  const bankAccountLabel = becomeMemberContent?.bank_account?.trim() || text.iban;
 
   const submitting = subscriptionState === "submitting";
   const subscribe = async (event: FormEvent<HTMLFormElement>) => {
@@ -111,14 +112,6 @@ export function SupportPage() {
         <h1>{text.title}</h1>
         <p>{text.intro}</p>
       </div>
-      <section className={styles.section} aria-labelledby="support-committee">
-        <div className={styles.sectionHeading}><h2 id="support-committee">{text.committee}</h2><p>{text.committeeIntro}</p></div>
-        {committeeLoading
-          ? <p>{text.committeeLoading}</p>
-          : committeeFailed
-            ? <p>{text.committeeError}</p>
-            : <ul className={styles.members}>{committeeMembers.map(member => <li key={member.id}><span>{member.full_name}</span>{shouldShowRole(member.role) && <>, <span className={styles.role}>{roleLabel(member.role)}</span></>}</li>)}</ul>}
-      </section>
       <section className={styles.section} aria-labelledby="support-membership">
         <div className={styles.sectionHeading}><h2 id="support-membership">{text.membership}</h2><p>{membershipIntroByLanguage?.[language] ?? text.funding}</p></div>
         <div className={styles.membership}>
@@ -126,7 +119,7 @@ export function SupportPage() {
             <p>{text.payment}</p>
             <h3>{text.fees}</h3>
             <dl className={styles.fees}><div><dt>{text.standard}</dt><dd>{regularQuotaLabel}</dd></div><div><dt>{text.reduced}</dt><dd>{reducedQuotaLabel}</dd></div></dl>
-            <p className={styles.accountLabel}>{text.account}</p><p className={styles.iban}>{text.iban}</p>
+            <p className={styles.accountLabel}>{text.account}</p><p className={styles.iban}>{bankAccountLabel}</p>
             <p>{text.instructions}</p>
           </div>
           <figure className={styles.qr}>
@@ -147,6 +140,14 @@ export function SupportPage() {
             {subscriptionState === "success" ? text.subscribeSuccess : subscriptionState === "error" ? text.subscribeError : subscriptionState === "invalid" ? text.invalidEmail : ""}
           </p>
         </form>
+      </section>
+      <section className={styles.section} aria-labelledby="support-committee">
+        <div className={styles.sectionHeading}><h2 id="support-committee">{text.committee}</h2><p>{text.committeeIntro}</p></div>
+        {committeeLoading
+          ? <p>{text.committeeLoading}</p>
+          : committeeFailed
+            ? <p>{text.committeeError}</p>
+            : <ul className={styles.members}>{committeeMembers.map(member => <li key={member.id}><span>{member.full_name}</span>{shouldShowRole(member.role) && <>, <span className={styles.role}>{roleLabel(member.role)}</span></>}</li>)}</ul>}
       </section>
       <section className={styles.section} aria-labelledby="support-institution">
         <div className={styles.sectionHeading}><h2 id="support-institution">{text.institution}</h2></div>

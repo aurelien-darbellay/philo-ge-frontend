@@ -9,7 +9,7 @@ import { TextArea } from "../../components/ui/TextArea/TextArea";
 import { TextField } from "../../components/ui/TextField/TextField";
 import { useText } from "../../i18n/useText";
 import { AppShell } from "../../layouts/AppShell/AppShell";
-import type { BecomeMemberContent } from "../../types";
+import type { BecomeMemberContent, OrganizationProfile } from "../../types";
 import { adminWebStableContentPageText } from "./AdminWebStableContentPage.text";
 import styles from "./AdminWebStableContentPage.module.css";
 
@@ -27,6 +27,16 @@ export function AdminWebStableContentPage() {
   const [introEn, setIntroEn] = useState("");
   const [regQuota, setRegQuota] = useState("");
   const [reduceQuota, setReduceQuota] = useState("");
+  const [profileEditorOpen, setProfileEditorOpen] = useState(false);
+  const [profileLoading, setProfileLoading] = useState(false);
+  const [profileSaving, setProfileSaving] = useState(false);
+  const [profileSaved, setProfileSaved] = useState(false);
+  const [profileError, setProfileError] = useState("");
+  const [profileEmail, setProfileEmail] = useState("");
+  const [profileInstagram, setProfileInstagram] = useState("");
+  const [profileFacebook, setProfileFacebook] = useState("");
+  const [profileBankAccount, setProfileBankAccount] = useState("");
+  const [profileAddress, setProfileAddress] = useState("");
 
   const applyContent = (content: BecomeMemberContent) => {
     setIntroFr(content.intro_fr);
@@ -38,7 +48,7 @@ export function AdminWebStableContentPage() {
   };
 
   useEffect(() => {
-    if (!editorOpen) return;
+    if (!editorOpen || !csrfToken) return;
 
     let active = true;
     setLoading(true);
@@ -50,9 +60,9 @@ export function AdminWebStableContentPage() {
         if (!active) return;
         applyContent(content);
       })
-      .catch(() => {
+      .catch((caught) => {
         if (!active) return;
-        setError(text.loadError);
+        setError(caught instanceof ApiError ? caught.message : text.loadError);
       })
       .finally(() => {
         if (active) setLoading(false);
@@ -61,7 +71,7 @@ export function AdminWebStableContentPage() {
     return () => {
       active = false;
     };
-  }, [editorOpen, text.loadError]);
+  }, [csrfToken, editorOpen, text.loadError]);
 
   const onSave = async () => {
     if (!csrfToken || saving) return;
@@ -104,6 +114,72 @@ export function AdminWebStableContentPage() {
     }
   };
 
+  const applyProfile = (profile: OrganizationProfile) => {
+    setProfileEmail(profile.email);
+    setProfileInstagram(profile.instagram ?? "");
+    setProfileFacebook(profile.facebook ?? "");
+    setProfileBankAccount(profile.bank_account);
+    setProfileAddress(profile.address ?? "");
+  };
+
+  useEffect(() => {
+    if (!profileEditorOpen || !csrfToken) return;
+
+    let active = true;
+    setProfileLoading(true);
+    setProfileSaved(false);
+    setProfileError("");
+
+    api.adminOrganizationProfile()
+      .then(({ profile }) => {
+        if (!active) return;
+        applyProfile(profile);
+      })
+      .catch((caught) => {
+        if (!active) return;
+        setProfileError(caught instanceof ApiError ? caught.message : text.profileLoadError);
+      })
+      .finally(() => {
+        if (active) setProfileLoading(false);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [csrfToken, profileEditorOpen, text.profileLoadError]);
+
+  const onSaveProfile = async () => {
+    if (!csrfToken || profileSaving) return;
+    const email = profileEmail.trim();
+    const bankAccount = profileBankAccount.trim();
+    if (email === "" || bankAccount === "") {
+      setProfileError(text.profileInvalid);
+      setProfileSaved(false);
+      return;
+    }
+
+    setProfileSaving(true);
+    setProfileSaved(false);
+    setProfileError("");
+
+    try {
+      const payload: OrganizationProfile = {
+        email,
+        instagram: profileInstagram.trim() === "" ? null : profileInstagram.trim(),
+        facebook: profileFacebook.trim() === "" ? null : profileFacebook.trim(),
+        bank_account: bankAccount,
+        address: profileAddress.trim() === "" ? null : profileAddress.trim(),
+      };
+      const { profile } = await api.updateAdminOrganizationProfile(payload, csrfToken);
+      applyProfile(profile);
+      setProfileSaved(true);
+    } catch (caught) {
+      setProfileError(caught instanceof ApiError ? caught.message : text.profileSaveError);
+    } finally {
+      setProfileSaving(false);
+    }
+  };
+
   return <AppShell><main className={styles.page}>
     <PageHeader eyebrow={text.eyebrow} title={text.title} lead={text.lead} />
     <Card className={styles.sectionCard}>
@@ -136,6 +212,39 @@ export function AdminWebStableContentPage() {
             <div className={styles.actions}>
               <Button onClick={onSave} disabled={saving}>{saving ? text.saving : text.save}</Button>
               {saved && <p className={styles.saved}>{text.saved}</p>}
+            </div>
+          </div>
+        </>)}
+    </Card>
+    <Card className={styles.profileCard}>
+      <h2>{text.profileTitle}</h2>
+      <p>{text.profileBody}</p>
+      <div className={styles.actions}>
+        <Button
+          variant="secondary"
+          onClick={() => setProfileEditorOpen((open) => !open)}
+        >
+          {profileEditorOpen ? text.profileCloseEditor : text.profileOpenEditor}
+        </Button>
+      </div>
+
+      {profileEditorOpen && (profileLoading
+        ? <p className={styles.state}>{text.profileLoading}</p>
+        : <>
+          {profileError && <Alert>{profileError}</Alert>}
+          <div className={styles.form}>
+            <div className={styles.quotaGrid}>
+              <TextField label={text.profileEmail} type="email" autoComplete="email" value={profileEmail} onChange={(event) => setProfileEmail(event.target.value)} />
+              <TextField label={text.profileBankAccount} value={profileBankAccount} onChange={(event) => setProfileBankAccount(event.target.value)} />
+            </div>
+            <div className={styles.quotaGrid}>
+              <TextField label={text.profileInstagram} value={profileInstagram} onChange={(event) => setProfileInstagram(event.target.value)} />
+              <TextField label={text.profileFacebook} value={profileFacebook} onChange={(event) => setProfileFacebook(event.target.value)} />
+            </div>
+            <TextArea label={text.profileAddress} value={profileAddress} onChange={(event) => setProfileAddress(event.target.value)} />
+            <div className={styles.actions}>
+              <Button onClick={onSaveProfile} disabled={profileSaving}>{profileSaving ? text.profileSaving : text.profileSave}</Button>
+              {profileSaved && <p className={styles.saved}>{text.profileSaved}</p>}
             </div>
           </div>
         </>)}
