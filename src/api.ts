@@ -43,6 +43,12 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
 }
 
 export const api = {
+  subscribeNewsletter: (email: string) =>
+    request<{ status: "ok" }>("/newsletter.php", {
+      method: "POST",
+      body: JSON.stringify({ email }),
+    }),
+
   login: (email: string, password: string, rememberMe: boolean) =>
     request<AuthPayload>("/auth/login.php", {
       method: "POST",

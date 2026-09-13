@@ -1,6 +1,6 @@
 .page {
   min-height: 100vh;
-  overflow: hidden;
+  overflow: clip;
   background: var(--color-background);
 }
 

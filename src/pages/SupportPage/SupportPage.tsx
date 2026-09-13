@@ -1,0 +1,82 @@
+import { useState, type FormEvent } from "react";
+import { api, ApiError } from "../../api";
+import paymentQr from "../../assets/QRCode.png";
+import academyLogo from "../../assets/SAHSS_Logo.jpg";
+import { PublicHeader } from "../../components/public/PublicHeader/PublicHeader";
+import { Button } from "../../components/ui/Button/Button";
+import { TextField } from "../../components/ui/TextField/TextField";
+import { useText } from "../../i18n/useText";
+import { supportPageText } from "./SupportPage.text";
+import styles from "./SupportPage.module.css";
+
+export function SupportPage() {
+  const text = useText(supportPageText);
+  const [email, setEmail] = useState("");
+  const [subscriptionState, setSubscriptionState] = useState<"idle" | "submitting" | "success" | "error" | "invalid">("idle");
+  const submitting = subscriptionState === "submitting";
+  const subscribe = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (submitting) return;
+    setSubscriptionState("submitting");
+    try {
+      await api.subscribeNewsletter(email.trim());
+      setEmail("");
+      setSubscriptionState("success");
+    } catch (error) {
+      setSubscriptionState(error instanceof ApiError && error.status === 422 ? "invalid" : "error");
+    }
+  };
+  const members = [
+    { name: text.laurent }, { name: text.parwana, role: text.treasurer },
+    { name: text.janette }, { name: text.stefan }, { name: text.nathalie },
+    { name: text.lucie, role: text.president }, { name: text.mischa, role: text.secretary },
+    { name: text.daniel }, { name: text.clarisse },
+  ];
+  return <div className={styles.page}>
+    <a className={styles.skipLink} href="#support-main">{text.skip}</a>
+    <PublicHeader />
+    <main id="support-main" className={styles.main}>
+      <div className={styles.introduction}>
+        <h1>{text.title}</h1>
+        <p>{text.intro}</p>
+      </div>
+      <section className={styles.section} aria-labelledby="support-committee">
+        <div className={styles.sectionHeading}><h2 id="support-committee">{text.committee}</h2><p>{text.committeeIntro}</p></div>
+        <ul className={styles.members}>{members.map(member => <li key={member.name}><span>{member.name}</span>{member.role && <>, <span className={styles.role}>{member.role}</span></>}</li>)}</ul>
+      </section>
+      <section className={styles.section} aria-labelledby="support-membership">
+        <div className={styles.sectionHeading}><h2 id="support-membership">{text.membership}</h2><p>{text.funding}</p></div>
+        <div className={styles.membership}>
+          <div className={styles.payment}>
+            <p>{text.payment}</p>
+            <h3>{text.fees}</h3>
+            <dl className={styles.fees}><div><dt>{text.standard}</dt><dd>{text.standardAmount}</dd></div><div><dt>{text.reduced}</dt><dd>{text.reducedAmount}</dd></div></dl>
+            <p className={styles.accountLabel}>{text.account}</p><p className={styles.iban}>{text.iban}</p>
+            <p>{text.instructions}</p>
+          </div>
+          <figure className={styles.qr}>
+            <div className={styles.qrMat}><img src={paymentQr} alt={text.qrAlt} /></div>
+            <figcaption>{text.qrCaption}</figcaption>
+            <a href={paymentQr} download="GGPh-QR-paiement.png">{text.download}<span aria-hidden="true"> ↓</span></a>
+          </figure>
+        </div>
+      </section>
+      <section className={`${styles.section} ${styles.newsletter}`} aria-labelledby="support-newsletter">
+        <div className={styles.sectionHeading}><h2 id="support-newsletter">{text.newsletter}</h2><p>{text.newsletterIntro}</p></div>
+        <form onSubmit={subscribe} aria-busy={submitting}>
+          <div className={styles.signup}>
+            <TextField label={text.email} type="email" autoComplete="email" name="email" required maxLength={254} value={email} disabled={submitting} aria-invalid={subscriptionState === "invalid"} aria-describedby="newsletter-feedback" onChange={(event) => { setEmail(event.target.value); setSubscriptionState("idle"); }} />
+            <Button type="submit" disabled={submitting}>{submitting ? text.subscribing : text.subscribe}</Button>
+          </div>
+          <p id="newsletter-feedback" className={styles.notice} role="status" aria-live="polite">
+            {subscriptionState === "success" ? text.subscribeSuccess : subscriptionState === "error" ? text.subscribeError : subscriptionState === "invalid" ? text.invalidEmail : ""}
+          </p>
+        </form>
+      </section>
+      <section className={styles.section} aria-labelledby="support-institution">
+        <div className={styles.sectionHeading}><h2 id="support-institution">{text.institution}</h2></div>
+        <img className={styles.academy} src={academyLogo} alt={text.academyAlt} />
+      </section>
+    </main>
+  </div>;
+}

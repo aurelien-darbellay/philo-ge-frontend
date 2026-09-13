@@ -16,6 +16,9 @@
   --color-motif-grey: #b0aea8;
   --color-background: #fffdf2;
   --color-header: rgb(255 253 242 / 90%);
+  --color-image-mat: #fff;
+  --support-qr-width: 17rem;
+  --support-logo-width: 30rem;
   --color-watermark: rgb(255 255 255 / 3.5%);
   --color-surface: rgb(255 255 255 / 72%);
   --color-surface-solid: #fffefa;

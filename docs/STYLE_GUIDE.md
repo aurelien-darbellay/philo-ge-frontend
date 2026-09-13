@@ -263,3 +263,15 @@ After visual changes:
 4. Confirm that the actual logo remains unchanged and decorative geometry uses
    motif tokens.
 5. Confirm that section widths and separators align with the header.
+
+## Public header
+
+The public header stays at the top while scrolling and uses the cream canvas.
+Display the full institutional name beside the compact logo, as requested in
+the client feedback. This is an approved exception to the adjacent-wordmark rule.
+Keep the official French organization name in every interface language.
+Navigation order is Programme, À propos, Archives, Podcasts, Nous soutenir.
+The member entry remains available in the footer. At narrow widths, use the
+accessible collapsible menu and allow the institutional name to wrap.
+The About link targets the homepage association section below the sticky header.
+The Nous soutenir link opens the support page at `/nous-soutenir`.
