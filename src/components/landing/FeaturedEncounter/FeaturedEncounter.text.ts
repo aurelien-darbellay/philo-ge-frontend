@@ -2,7 +2,7 @@ import { defaultText, defineTextMap } from "../../../i18n/textMap";
 
 export const featuredEncounterText = defineTextMap({
   fr: {
-    sectionLabel: "À la une",
+    sectionLabel: "Actualités",
     cycle: "Cycle",
     event: "Rencontre",
     events: "rencontres",

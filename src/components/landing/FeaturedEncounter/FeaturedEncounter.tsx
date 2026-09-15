@@ -38,7 +38,7 @@ export function FeaturedEncounter() {
     : `/evenements/${featured.value.id}`;
   let description: string | null;
   let date: string;
-  let details: string[];
+  let details: { label: string; speaker: boolean }[];
   let kindLabel: string;
   let posterDates: string[];
 
@@ -50,7 +50,9 @@ export function FeaturedEncounter() {
       .map((value) => formatDate(value, locale))
       .join(" – ");
     const speakers = [...new Set(cycle.events.flatMap((event) => event.speakers.map((speaker) => speaker.name)))];
-    details = speakers.length > 0 ? [speakers.join(", ")] : [`${cycle.events.length} ${text.events}`];
+    details = speakers.length > 0
+      ? [{ label: speakers.join(", "), speaker: true }]
+      : [{ label: `${cycle.events.length} ${text.events}`, speaker: false }];
     kindLabel = text.cycle;
     posterDates = [cycle.starts_on ?? cycle.created_at, cycle.ends_on]
       .filter((value): value is string => value !== null)
@@ -60,9 +62,9 @@ export function FeaturedEncounter() {
     description = event.summary || event.description;
     date = formatDate(event.starts_at, locale, true);
     details = [
-      event.speakers.map((speaker) => speaker.name).join(", "),
-      event.venue.name || (event.venue.online_url ? text.online : ""),
-    ].filter(Boolean);
+      { label: event.speakers.map((speaker) => speaker.name).join(", "), speaker: true },
+      { label: event.venue.name || (event.venue.online_url ? text.online : ""), speaker: false },
+    ].filter((detail) => detail.label !== "");
     kindLabel = text.event;
     posterDates = [formatPosterDate(event.starts_at)];
   }
@@ -90,7 +92,7 @@ export function FeaturedEncounter() {
           <div className={styles.meta}><span>{kindLabel}</span><time>{date}</time></div>
           <h2 id="featured-title">{content.title}</h2>
           {description && <p className={styles.description}>{description}</p>}
-          {details.length > 0 && <dl className={styles.details}>{details.map((detail) => <div key={detail}><dt>{detail}</dt></div>)}</dl>}
+          {details.length > 0 && <dl className={styles.details}>{details.map((detail) => <div key={detail.label}><dt className={detail.speaker ? styles.speaker : undefined}>{detail.label}</dt></div>)}</dl>}
           <Link className={styles.action} to={detailPath}>{text.action}<span aria-hidden="true">→</span></Link>
         </article>
       </div>
