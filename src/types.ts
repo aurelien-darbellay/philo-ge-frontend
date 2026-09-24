@@ -48,6 +48,17 @@ export type BecomeMemberContent = {
   bank_account?: string | null;
 };
 
+export type AboutContent = {
+  title_fr: string;
+  title_de: string;
+  title_it: string;
+  title_en: string;
+  body_fr: string;
+  body_de: string;
+  body_it: string;
+  body_en: string;
+};
+
 export type OrganizationProfile = {
   email: string;
   instagram: string | null;

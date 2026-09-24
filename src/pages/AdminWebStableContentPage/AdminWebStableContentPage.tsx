@@ -4,18 +4,34 @@ import { useAuth } from "../../AuthContext";
 import { Alert } from "../../components/ui/Alert/Alert";
 import { Button } from "../../components/ui/Button/Button";
 import { Card } from "../../components/ui/Card/Card";
+import { MarkdownEditor } from "../../components/ui/MarkdownEditor/MarkdownEditor";
 import { PageHeader } from "../../components/ui/PageHeader/PageHeader";
 import { TextArea } from "../../components/ui/TextArea/TextArea";
 import { TextField } from "../../components/ui/TextField/TextField";
 import { useText } from "../../i18n/useText";
 import { AppShell } from "../../layouts/AppShell/AppShell";
-import type { BecomeMemberContent, OrganizationProfile } from "../../types";
+import type { AboutContent, BecomeMemberContent, OrganizationProfile } from "../../types";
 import { adminWebStableContentPageText } from "./AdminWebStableContentPage.text";
 import styles from "./AdminWebStableContentPage.module.css";
 
 export function AdminWebStableContentPage() {
   const text = useText(adminWebStableContentPageText);
   const { csrfToken } = useAuth();
+  const [aboutEditorOpen, setAboutEditorOpen] = useState(false);
+  const [aboutLoading, setAboutLoading] = useState(false);
+  const [aboutSaving, setAboutSaving] = useState(false);
+  const [aboutSaved, setAboutSaved] = useState(false);
+  const [aboutError, setAboutError] = useState("");
+  const [aboutContent, setAboutContent] = useState<AboutContent>({
+    title_fr: "",
+    title_de: "",
+    title_it: "",
+    title_en: "",
+    body_fr: "",
+    body_de: "",
+    body_it: "",
+    body_en: "",
+  });
   const [editorOpen, setEditorOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -37,6 +53,61 @@ export function AdminWebStableContentPage() {
   const [profileFacebook, setProfileFacebook] = useState("");
   const [profileBankAccount, setProfileBankAccount] = useState("");
   const [profileAddress, setProfileAddress] = useState("");
+
+  useEffect(() => {
+    if (!aboutEditorOpen || !csrfToken) return;
+
+    let active = true;
+    setAboutLoading(true);
+    setAboutSaved(false);
+    setAboutError("");
+
+    api.adminAboutContent()
+      .then(({ content }) => {
+        if (active) setAboutContent(content);
+      })
+      .catch((caught) => {
+        if (!active) return;
+        setAboutError(caught instanceof ApiError ? caught.message : text.aboutLoadError);
+      })
+      .finally(() => {
+        if (active) setAboutLoading(false);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [aboutEditorOpen, csrfToken, text.aboutLoadError]);
+
+  const setAboutField = (field: keyof AboutContent, value: string) => {
+    setAboutContent((current) => ({ ...current, [field]: value }));
+    setAboutSaved(false);
+  };
+
+  const onSaveAbout = async () => {
+    if (!csrfToken || aboutSaving) return;
+    const payload = Object.fromEntries(
+      Object.entries(aboutContent).map(([field, value]) => [field, value.trim()]),
+    ) as AboutContent;
+    if (Object.values(payload).some((value) => value === "")) {
+      setAboutError(text.aboutInvalid);
+      setAboutSaved(false);
+      return;
+    }
+
+    setAboutSaving(true);
+    setAboutSaved(false);
+    setAboutError("");
+    try {
+      const { content } = await api.updateAdminAboutContent(payload, csrfToken);
+      setAboutContent(content);
+      setAboutSaved(true);
+    } catch (caught) {
+      setAboutError(caught instanceof ApiError ? caught.message : text.aboutSaveError);
+    } finally {
+      setAboutSaving(false);
+    }
+  };
 
   const applyContent = (content: BecomeMemberContent) => {
     setIntroFr(content.intro_fr);
@@ -182,6 +253,39 @@ export function AdminWebStableContentPage() {
 
   return <AppShell><main className={styles.page}>
     <PageHeader eyebrow={text.eyebrow} title={text.title} lead={text.lead} />
+    <Card className={styles.sectionCard}>
+      <h2>{text.aboutTitle}</h2>
+      <p>{text.aboutBody}</p>
+      <div className={styles.actions}>
+        <Button variant="secondary" onClick={() => setAboutEditorOpen((open) => !open)}>
+          {aboutEditorOpen ? text.aboutCloseEditor : text.aboutOpenEditor}
+        </Button>
+      </div>
+
+      {aboutEditorOpen && (aboutLoading
+        ? <p className={styles.state}>{text.aboutLoading}</p>
+        : <>
+          {aboutError && <Alert>{aboutError}</Alert>}
+          <div className={styles.form}>
+            <div className={styles.introGrid}>
+              <TextField label={text.aboutTitleFr} value={aboutContent.title_fr} onChange={(event) => setAboutField("title_fr", event.target.value)} maxLength={255} />
+              <TextField label={text.aboutTitleDe} value={aboutContent.title_de} onChange={(event) => setAboutField("title_de", event.target.value)} maxLength={255} />
+              <TextField label={text.aboutTitleIt} value={aboutContent.title_it} onChange={(event) => setAboutField("title_it", event.target.value)} maxLength={255} />
+              <TextField label={text.aboutTitleEn} value={aboutContent.title_en} onChange={(event) => setAboutField("title_en", event.target.value)} maxLength={255} />
+            </div>
+            <div className={styles.introGrid}>
+              <MarkdownEditor label={text.aboutBodyFr} value={aboutContent.body_fr} onChange={(value) => setAboutField("body_fr", value)} />
+              <MarkdownEditor label={text.aboutBodyDe} value={aboutContent.body_de} onChange={(value) => setAboutField("body_de", value)} />
+              <MarkdownEditor label={text.aboutBodyIt} value={aboutContent.body_it} onChange={(value) => setAboutField("body_it", value)} />
+              <MarkdownEditor label={text.aboutBodyEn} value={aboutContent.body_en} onChange={(value) => setAboutField("body_en", value)} />
+            </div>
+            <div className={styles.actions}>
+              <Button onClick={onSaveAbout} disabled={aboutSaving}>{aboutSaving ? text.aboutSaving : text.aboutSave}</Button>
+              {aboutSaved && <p className={styles.saved}>{text.aboutSaved}</p>}
+            </div>
+          </div>
+        </>)}
+    </Card>
     <Card className={styles.sectionCard}>
       <h2>{text.sectionTitle}</h2>
       <p>{text.sectionBody}</p>

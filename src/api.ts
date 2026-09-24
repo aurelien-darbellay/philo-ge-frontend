@@ -1,4 +1,4 @@
-import type { AdminCycle, AdminCycleSummary, AdminUser, AuthPayload, BecomeMemberContent, CommitteeMember, CommitteeRole, CycleInput, EventInput, Invitation, MediaImage, OrganizationProfile, Podcast, PodcastMetadataInput, PodcastPagination, PodcastPodcasterInput, PublicCycle, PublicEvent } from "./types";
+import type { AboutContent, AdminCycle, AdminCycleSummary, AdminUser, AuthPayload, BecomeMemberContent, CommitteeMember, CommitteeRole, CycleInput, EventInput, Invitation, MediaImage, OrganizationProfile, Podcast, PodcastMetadataInput, PodcastPagination, PodcastPodcasterInput, PublicCycle, PublicEvent } from "./types";
 
 const DEFAULT_API_URL = import.meta.env.DEV ? "/api" : "https://api.philo-ge.ch";
 const API_URL = (import.meta.env.VITE_API_URL ?? DEFAULT_API_URL).replace(/\/$/, "");
@@ -43,6 +43,17 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
 }
 
 export const api = {
+  aboutContent: () => request<{ content: AboutContent }>("/about-content.php"),
+
+  adminAboutContent: () => request<{ content: AboutContent }>("/admin/about-content.php"),
+
+  updateAdminAboutContent: (content: AboutContent, csrfToken: string) =>
+    request<{ content: AboutContent }>("/admin/about-content.php", {
+      method: "PUT",
+      headers: { "X-CSRF-Token": csrfToken },
+      body: JSON.stringify(content),
+    }),
+
   becomeMemberContent: () => request<{ content: BecomeMemberContent }>("/become-member-content.php"),
 
   organizationProfile: () => request<{ profile: OrganizationProfile }>("/organization-profile.php"),
