@@ -4,53 +4,52 @@ import type { PublicCycle, PublicEvent } from "../types";
 
 type ProgrammeState = {
   cycles: PublicCycle[];
-  standaloneEvents: PublicEvent[];
-  showingPast: boolean;
+  events: PublicEvent[];
+  today: string;
   loading: boolean;
   failed: boolean;
 };
 
+function localDateValue(date: Date): string {
+  const year = String(date.getFullYear()).padStart(4, "0");
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+function shiftLocalYears(date: Date, years: number): Date {
+  const shifted = new Date(date);
+  const month = shifted.getMonth();
+  shifted.setFullYear(shifted.getFullYear() + years);
+  if (shifted.getMonth() !== month) shifted.setDate(0);
+  return shifted;
+}
+
 export function useProgramme(): ProgrammeState {
-  const [state, setState] = useState<ProgrammeState>({ cycles: [], standaloneEvents: [], showingPast: false, loading: true, failed: false });
+  const initialToday = localDateValue(new Date());
+  const [state, setState] = useState<ProgrammeState>({ cycles: [], events: [], today: initialToday, loading: true, failed: false });
 
   useEffect(() => {
     let active = true;
-    const today = new Date();
-    const oneYearFromToday = new Date(today);
-    oneYearFromToday.setUTCFullYear(oneYearFromToday.getUTCFullYear() + 1);
-    const oneYearBeforeToday = new Date(today);
-    oneYearBeforeToday.setUTCFullYear(oneYearBeforeToday.getUTCFullYear() - 1);
-    const todayValue = today.toISOString().slice(0, 10);
-    const futureValue = oneYearFromToday.toISOString().slice(0, 10);
-    const pastValue = oneYearBeforeToday.toISOString().slice(0, 10);
+    const now = new Date();
+    const today = localDateValue(now);
+    const from = localDateValue(shiftLocalYears(now, -2));
+    const to = localDateValue(shiftLocalYears(now, 5));
 
-    const loadRange = async (from: string, to: string, showingPast: boolean): Promise<ProgrammeState> => {
-      const [cycleResponse, eventResponse] = await Promise.all([api.cycles(from, to), api.events(from, to)]);
-      const inRange = (event: PublicEvent) => event.starts_at >= from && event.starts_at < to;
-      const direction = showingPast ? -1 : 1;
-      return {
-        cycles: cycleResponse.cycles
-          .map((cycle) => ({ ...cycle, events: cycle.events.filter(inRange) }))
-          .filter((cycle) => cycle.events.length > 0)
-          .sort((left, right) => direction * (left.starts_on ?? left.ends_on ?? "").localeCompare(right.starts_on ?? right.ends_on ?? "")),
-        standaloneEvents: eventResponse.events
-          .filter((event) => event.cycle === null)
-          .sort((left, right) => direction * left.starts_at.localeCompare(right.starts_at)),
-        showingPast,
-        loading: false,
-        failed: false,
-      };
-    };
-
-    void loadRange(todayValue, futureValue, false)
-      .then((future) => future.cycles.length > 0 || future.standaloneEvents.length > 0
-        ? future
-        : loadRange(pastValue, todayValue, true))
-      .then((programme) => {
-        if (active) setState(programme);
+    void Promise.all([api.cycles(from, to), api.events(from, to)])
+      .then(([cycleResponse, eventResponse]) => {
+        if (active) {
+          setState({
+            cycles: [...cycleResponse.cycles].sort((left, right) => (left.starts_on ?? left.ends_on ?? "").localeCompare(right.starts_on ?? right.ends_on ?? "")),
+            events: [...eventResponse.events].sort((left, right) => left.starts_at.localeCompare(right.starts_at)),
+            today,
+            loading: false,
+            failed: false,
+          });
+        }
       })
       .catch(() => {
-        if (active) setState({ cycles: [], standaloneEvents: [], showingPast: false, loading: false, failed: true });
+        if (active) setState({ cycles: [], events: [], today, loading: false, failed: true });
       });
 
     return () => {

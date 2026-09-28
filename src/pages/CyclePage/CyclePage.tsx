@@ -1,5 +1,6 @@
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { CycleRow } from "../../components/programme/CycleRow/CycleRow";
+import { CyclePartners } from "../../components/programme/CyclePartners/CyclePartners";
 import { PublicHeader } from "../../components/public/PublicHeader/PublicHeader";
 import { usePublicCycle } from "../../hooks/usePublicCycle";
 import { useText } from "../../i18n/useText";
@@ -35,6 +36,7 @@ export function CyclePage() {
         {cycle.description && <p className={styles.description}>{cycle.description}</p>}
       </section>
       <CycleRow cycle={cycle} showTitle={false} />
+      <CyclePartners partners={cycle.partners} />
     </main>
   </div>;
 }

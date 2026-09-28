@@ -1,6 +1,7 @@
 .page { width: min(100%, calc(var(--page-width-narrow) + var(--page-gutter) + var(--page-gutter))); margin-inline: auto; padding: var(--space-8) var(--page-gutter) var(--space-12); }
 .heading { display: flex; align-items: flex-start; flex-direction: column; gap: var(--space-4); }
 .card { padding: var(--space-8); }
+.card + .card { margin-top: var(--space-6); }
 .form, .section { display: grid; }
 .form { gap: var(--space-12); }
 .section { gap: var(--space-5); }

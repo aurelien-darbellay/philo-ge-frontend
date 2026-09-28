@@ -1,4 +1,4 @@
-import type { AboutContent, AdminCycle, AdminCycleSummary, AdminUser, AuthPayload, BecomeMemberContent, CommitteeMember, CommitteeRole, CycleInput, EventInput, Invitation, MediaImage, OrganizationProfile, Podcast, PodcastMetadataInput, PodcastPagination, PodcastPodcasterInput, PublicCycle, PublicEvent } from "./types";
+import type { AboutContent, AdminCycle, AdminCycleSummary, AdminUser, AuthPayload, BecomeMemberContent, CommitteeMember, CommitteeRole, CycleInput, CyclePartner, CyclePartnerInput, EventInput, Invitation, MediaImage, OrganizationProfile, Podcast, PodcastMetadataInput, PodcastPagination, PodcastPodcasterInput, PublicCycle, PublicEvent } from "./types";
 
 const DEFAULT_API_URL = import.meta.env.DEV ? "/api" : "https://api.philo-ge.ch";
 const API_URL = (import.meta.env.VITE_API_URL ?? DEFAULT_API_URL).replace(/\/$/, "");
@@ -261,6 +261,26 @@ export const api = {
     body.append("image", image);
     return request<{ image_path: string }>("/admin/cycles/image.php", { method: "POST", headers: { "X-CSRF-Token": csrfToken }, body });
   },
+
+  createCyclePartner: (cycleId: number, partner: CyclePartnerInput, csrfToken: string) =>
+    request<{ partner: CyclePartner }>(`/admin/cycles/partners.php?cycle_id=${cycleId}`, {
+      method: "POST",
+      headers: { "X-CSRF-Token": csrfToken },
+      body: JSON.stringify(partner),
+    }),
+
+  updateCyclePartner: (id: number, partner: CyclePartnerInput, csrfToken: string) =>
+    request<{ partner: CyclePartner }>(`/admin/cycles/partners.php?id=${id}`, {
+      method: "PUT",
+      headers: { "X-CSRF-Token": csrfToken },
+      body: JSON.stringify(partner),
+    }),
+
+  deleteCyclePartner: (id: number, csrfToken: string) =>
+    request<{ status: "ok" }>(`/admin/cycles/partners.php?id=${id}`, {
+      method: "DELETE",
+      headers: { "X-CSRF-Token": csrfToken },
+    }),
 
   createEvent: (event: EventInput, csrfToken: string) =>
     request<{ event: PublicEvent }>("/admin/events.php", {

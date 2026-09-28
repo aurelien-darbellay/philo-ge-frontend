@@ -167,6 +167,17 @@ export type AdminCycleSummary = {
   status: ContentStatus;
 };
 
+export type CyclePartner = {
+  id: number;
+  cycle_id: number;
+  name: string;
+  logo_path: string;
+  website_url: string | null;
+  display_order: number;
+};
+
+export type CyclePartnerInput = Pick<CyclePartner, "name" | "logo_path" | "website_url" | "display_order">;
+
 export type AdminCycle = {
   id: number;
   title: string;
@@ -181,6 +192,7 @@ export type AdminCycle = {
   created_at: string;
   updated_at: string;
   events: null;
+  partners: CyclePartner[];
 };
 
 export type CycleInput = {
@@ -205,4 +217,5 @@ export type PublicCycle = {
   created_at: string;
   updated_at: string;
   events: PublicEvent[];
+  partners: CyclePartner[];
 };
