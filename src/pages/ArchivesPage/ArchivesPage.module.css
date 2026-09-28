@@ -1,15 +1,22 @@
 .page { min-height: 100vh; background: var(--color-background); color: var(--color-ink); }
 .main { width: min(100%, calc(var(--page-width) + var(--page-gutter) + var(--page-gutter))); margin-inline: auto; padding: var(--space-8) var(--page-gutter) var(--space-12); }
-.heading { margin-bottom: var(--space-8); display: flex; align-items: end; justify-content: space-between; gap: var(--space-8); }
+.heading { margin-bottom: var(--space-8); display: grid; grid-template-columns: minmax(0, 1fr) minmax(24rem, var(--form-width-wide)); gap: var(--space-12); align-items: end; }
 .heading h1 { margin: 0; font-family: var(--font-heading); font-size: var(--font-size-section); line-height: 1; letter-spacing: -0.04em; }
-.heading > div > p { max-width: 34rem; margin-top: var(--space-4); color: var(--color-text-muted); }
-.filters { width: min(100%, var(--form-width-wide)); display: grid; gap: var(--space-5); }
-.range { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-5); }
-.search, .range label { display: grid; gap: var(--space-2); color: var(--color-text-muted); font-size: var(--font-size-xs); letter-spacing: var(--letter-spacing-label); text-transform: uppercase; }
-.search input, .range input { width: 100%; padding: var(--space-3) 0; border: 0; border-bottom: 1px solid var(--color-ink); border-radius: 0; background: transparent; color: var(--color-ink); font: inherit; font-size: var(--font-size-sm); letter-spacing: normal; text-transform: none; }
-.search input { font-size: var(--font-size-md); }
-.search input::placeholder { color: var(--color-text-subtle); }
-.search input:focus-visible, .range input:focus-visible { outline: 0; box-shadow: 0 var(--space-1) 0 0 var(--color-primary); }
+.heading > div > p { max-width: 34rem; margin-top: var(--space-4); color: var(--color-text-muted); font-size: var(--font-size-lg); }
+.filters { display: grid; gap: var(--space-5); }
+.textFilters, .range { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-5); }
+.filters label { display: grid; gap: var(--space-2); color: var(--color-text-muted); font-size: var(--font-size-xs); letter-spacing: var(--letter-spacing-label); text-transform: uppercase; }
+.filters input { width: 100%; padding: var(--space-3) 0; border: 0; border-bottom: 1px solid var(--color-ink); border-radius: 0; background: transparent; color: var(--color-ink); font: inherit; font-size: var(--font-size-sm); letter-spacing: normal; text-transform: none; }
+.textFilters input { font-size: var(--font-size-md); }
+.filters input::placeholder { color: var(--color-text-subtle); }
+.filters input:focus-visible { outline: 0; box-shadow: 0 var(--space-1) 0 0 var(--color-primary); }
+.searchActions { display: flex; justify-content: space-between; gap: var(--space-4); }
+.cycleToggle, .cycleToggleActive { border: 1px solid var(--color-border-solid); }
+.cycleToggleActive { border-color: var(--color-primary); background: transparent; color: var(--color-primary); }
 .state { padding-block: var(--space-12); border-top: 1px solid var(--color-border); color: var(--color-text-muted); }
 .state h2 { margin-bottom: var(--space-4); color: var(--color-ink); font-family: var(--font-heading); font-size: var(--font-size-xl); }
-@media (max-width: 47.5rem) { .heading { align-items: stretch; flex-direction: column; gap: var(--space-6); }.filters { width: 100%; } }
+.resultsHeading { padding-block: var(--space-4); display: flex; align-items: center; justify-content: space-between; gap: var(--space-6); color: var(--color-text-muted); font-size: var(--font-size-sm); }
+.resultsHeading p { margin: 0; }
+.navigation { padding-top: var(--space-8); display: flex; justify-content: space-between; gap: var(--space-5); }
+@media (max-width: 60rem) { .heading { grid-template-columns: 1fr; gap: var(--space-8); }.filters { width: min(100%, var(--form-width-wide)); } }
+@media (max-width: 47.5rem) { .textFilters, .range { grid-template-columns: 1fr; }.searchActions { align-items: stretch; flex-direction: column; }.resultsHeading { align-items: flex-start; flex-direction: column; gap: var(--space-2); }.navigation { align-items: stretch; flex-direction: column-reverse; } }

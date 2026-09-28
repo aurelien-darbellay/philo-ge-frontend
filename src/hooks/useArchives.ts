@@ -1,49 +1,52 @@
 import { useEffect, useState } from "react";
 import { api } from "../api";
-import type { PublicCycle, PublicEvent } from "../types";
+import type { ArchiveResult, ArchiveSearchQuery } from "../types";
 
 type ArchivesState = {
-  cycles: PublicCycle[];
-  standaloneEvents: PublicEvent[];
+  results: ArchiveResult[];
+  range: { from: string; to: string } | null;
+  total: number;
+  limit: number;
+  page: number;
+  pages: number;
   loading: boolean;
   failed: boolean;
 };
 
-export function useArchives(from: string, to: string): ArchivesState {
-  const [state, setState] = useState<ArchivesState>({ cycles: [], standaloneEvents: [], loading: true, failed: false });
+const emptyState = (): ArchivesState => ({ results: [], range: null, total: 0, limit: 30, page: 1, pages: 1, loading: true, failed: false });
+
+export function useArchives(query: ArchiveSearchQuery): ArchivesState {
+  const [state, setState] = useState<ArchivesState>(emptyState);
 
   useEffect(() => {
     let active = true;
 
-    if (!from || !to || from > to) {
-      setState({ cycles: [], standaloneEvents: [], loading: false, failed: false });
-      return () => {
-        active = false;
-      };
+    if (query.from && query.to && query.from > query.to) {
+      setState({ ...emptyState(), loading: false });
+      return () => { active = false; };
     }
 
     setState((current) => ({ ...current, loading: true, failed: false }));
-    void Promise.all([api.cycles(from, to), api.events(from, to)])
-      .then(([cycleResponse, eventResponse]) => {
+    void api.archives(query)
+      .then((response) => {
         if (!active) return;
         setState({
-          cycles: [...cycleResponse.cycles].sort((left, right) =>
-            (right.starts_on ?? right.ends_on ?? "").localeCompare(left.starts_on ?? left.ends_on ?? "")),
-          standaloneEvents: eventResponse.events
-            .filter((event) => event.cycle === null)
-            .sort((left, right) => right.starts_at.localeCompare(left.starts_at)),
+          results: response.results,
+          range: response.range,
+          total: response.pagination.total,
+          limit: response.pagination.limit,
+          page: response.pagination.page,
+          pages: response.pagination.pages,
           loading: false,
           failed: false,
         });
       })
       .catch(() => {
-        if (active) setState({ cycles: [], standaloneEvents: [], loading: false, failed: true });
+        if (active) setState({ ...emptyState(), loading: false, failed: true });
       });
 
-    return () => {
-      active = false;
-    };
-  }, [from, to]);
+    return () => { active = false; };
+  }, [query.from, query.page, query.speaker, query.title, query.to]);
 
   return state;
 }

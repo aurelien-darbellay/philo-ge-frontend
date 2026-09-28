@@ -219,3 +219,26 @@ export type PublicCycle = {
   events: PublicEvent[];
   partners: CyclePartner[];
 };
+
+export type ArchiveSearchQuery = {
+  from?: string;
+  to?: string;
+  title?: string;
+  speaker?: string;
+  page?: number;
+};
+
+export type ArchiveResult =
+  | { type: "event"; date: string; event: PublicEvent }
+  | { type: "cycle"; date: string; cycle: PublicCycle };
+
+export type ArchiveSearchResponse = {
+  results: ArchiveResult[];
+  range: { from: string; to: string };
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    pages: number;
+  };
+};

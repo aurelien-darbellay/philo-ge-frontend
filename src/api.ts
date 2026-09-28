@@ -1,4 +1,4 @@
-import type { AboutContent, AdminCycle, AdminCycleSummary, AdminUser, AuthPayload, BecomeMemberContent, CommitteeMember, CommitteeRole, CycleInput, CyclePartner, CyclePartnerInput, EventInput, Invitation, MediaImage, OrganizationProfile, Podcast, PodcastMetadataInput, PodcastPagination, PodcastPodcasterInput, PublicCycle, PublicEvent } from "./types";
+import type { AboutContent, AdminCycle, AdminCycleSummary, AdminUser, ArchiveSearchQuery, ArchiveSearchResponse, AuthPayload, BecomeMemberContent, CommitteeMember, CommitteeRole, CycleInput, CyclePartner, CyclePartnerInput, EventInput, Invitation, MediaImage, OrganizationProfile, Podcast, PodcastMetadataInput, PodcastPagination, PodcastPodcasterInput, PublicCycle, PublicEvent } from "./types";
 
 const DEFAULT_API_URL = import.meta.env.DEV ? "/api" : "https://api.philo-ge.ch";
 const API_URL = (import.meta.env.VITE_API_URL ?? DEFAULT_API_URL).replace(/\/$/, "");
@@ -335,4 +335,15 @@ export const api = {
 
   events: (from: string, to: string) =>
     request<{ events: PublicEvent[] }>(`/events.php?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}`),
+
+  archives: (query: ArchiveSearchQuery = {}) => {
+    const parameters = new URLSearchParams();
+    if (query.from) parameters.set("from", query.from);
+    if (query.to) parameters.set("to", query.to);
+    if (query.title?.trim()) parameters.set("title", query.title.trim());
+    if (query.speaker?.trim()) parameters.set("speaker", query.speaker.trim());
+    if (query.page && query.page > 1) parameters.set("page", String(query.page));
+    const search = parameters.toString();
+    return request<ArchiveSearchResponse>(`/archives.php${search ? `?${search}` : ""}`);
+  },
 };
