@@ -1,4 +1,4 @@
-import type { AboutContent, AdminCycle, AdminCycleSummary, AdminUser, ArchiveSearchQuery, ArchiveSearchResponse, AuthPayload, BecomeMemberContent, CommitteeMember, CommitteeRole, CycleInput, CyclePartner, CyclePartnerInput, EventInput, Invitation, MediaImage, OrganizationProfile, Podcast, PodcastMetadataInput, PodcastPagination, PodcastPodcasterInput, PublicCycle, PublicEvent } from "./types";
+import type { AboutContent, AdminCycle, AdminCycleSummary, AdminUser, ArchiveSearchQuery, ArchiveSearchResponse, AuthPayload, BecomeMemberContent, CommitteeMember, CommitteeRole, CycleInput, CyclePartner, CyclePartnerInput, EventInput, Invitation, MediaImage, OrganizationProfile, Podcast, PodcastMetadataInput, PodcastPagination, PodcastPodcasterInput, PublicCycle, PublicEvent, RegularSponsor, RegularSponsorInput } from "./types";
 
 const DEFAULT_API_URL = import.meta.env.DEV ? "/api" : "https://api.philo-ge.ch";
 const API_URL = (import.meta.env.VITE_API_URL ?? DEFAULT_API_URL).replace(/\/$/, "");
@@ -43,6 +43,40 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
 }
 
 export const api = {
+  regularSponsors: () => request<{ sponsors: RegularSponsor[] }>("/regular-sponsors.php"),
+
+  adminRegularSponsors: () => request<{ sponsors: RegularSponsor[] }>("/admin/regular-sponsors.php"),
+
+  createRegularSponsor: (sponsor: RegularSponsorInput, csrfToken: string) =>
+    request<{ sponsor: RegularSponsor }>("/admin/regular-sponsors.php", {
+      method: "POST",
+      headers: { "X-CSRF-Token": csrfToken },
+      body: JSON.stringify(sponsor),
+    }),
+
+  updateRegularSponsor: (id: number, sponsor: RegularSponsorInput, csrfToken: string) =>
+    request<{ sponsor: RegularSponsor }>(`/admin/regular-sponsors.php?id=${id}`, {
+      method: "PUT",
+      headers: { "X-CSRF-Token": csrfToken },
+      body: JSON.stringify(sponsor),
+    }),
+
+  deleteRegularSponsor: (id: number, csrfToken: string) =>
+    request<{ status: "ok" }>(`/admin/regular-sponsors.php?id=${id}`, {
+      method: "DELETE",
+      headers: { "X-CSRF-Token": csrfToken },
+    }),
+
+  uploadRegularSponsorLogo: (image: File, csrfToken: string) => {
+    const body = new FormData();
+    body.append("image", image);
+    return request<{ image_path: string }>("/admin/regular-sponsors/image.php", {
+      method: "POST",
+      headers: { "X-CSRF-Token": csrfToken },
+      body,
+    });
+  },
+
   aboutContent: () => request<{ content: AboutContent }>("/about-content.php"),
 
   adminAboutContent: () => request<{ content: AboutContent }>("/admin/about-content.php"),

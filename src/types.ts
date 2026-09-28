@@ -30,6 +30,15 @@ export type MediaImage = {
   modified_at: string;
 };
 
+export type RegularSponsor = {
+  id: number;
+  name: string;
+  url: string | null;
+  logo_path: string;
+};
+
+export type RegularSponsorInput = Omit<RegularSponsor, "id">;
+
 export type CommitteeRole = "treasurer" | "secretary" | "president" | "member";
 
 export type CommitteeMember = {

@@ -1,13 +1,12 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { api, apiAssetUrl, ApiError } from "../../api";
-import academyLogo from "../../assets/SAHSS_Logo.jpg";
 import { PublicHeader } from "../../components/public/PublicHeader/PublicHeader";
 import { Button } from "../../components/ui/Button/Button";
 import { TextField } from "../../components/ui/TextField/TextField";
 import { useLanguage } from "../../i18n/LanguageContext";
 import { languageLocales } from "../../i18n/textMap";
 import { useText } from "../../i18n/useText";
-import type { BecomeMemberContent, CommitteeRole } from "../../types";
+import type { BecomeMemberContent, CommitteeRole, RegularSponsor } from "../../types";
 import { supportPageText } from "./SupportPage.text";
 import styles from "./SupportPage.module.css";
 
@@ -18,6 +17,7 @@ export function SupportPage() {
   const [committeeLoading, setCommitteeLoading] = useState(true);
   const [committeeFailed, setCommitteeFailed] = useState(false);
   const [becomeMemberContent, setBecomeMemberContent] = useState<BecomeMemberContent | null>(null);
+  const [regularSponsors, setRegularSponsors] = useState<RegularSponsor[]>([]);
   const [email, setEmail] = useState("");
   const [subscriptionState, setSubscriptionState] = useState<"idle" | "submitting" | "success" | "error" | "invalid">("idle");
 
@@ -41,6 +41,14 @@ export function SupportPage() {
     return () => {
       active = false;
     };
+  }, []);
+
+  useEffect(() => {
+    let active = true;
+    void api.regularSponsors()
+      .then(({ sponsors }) => { if (active) setRegularSponsors(sponsors); })
+      .catch(() => { if (active) setRegularSponsors([]); });
+    return () => { active = false; };
   }, []);
 
   useEffect(() => {
@@ -159,7 +167,11 @@ export function SupportPage() {
       </section>
       <section className={styles.section} aria-labelledby="support-institution">
         <div className={styles.sectionHeading}><h2 id="support-institution">{text.institution}</h2></div>
-        <img className={styles.academy} src={academyLogo} alt={text.academyAlt} />
+        <ul className={styles.sponsors}>{regularSponsors.map((sponsor) => <li key={sponsor.id}>
+          {sponsor.url
+            ? <a href={sponsor.url} target="_blank" rel="noreferrer"><img src={apiAssetUrl(sponsor.logo_path)} alt={sponsor.name} /></a>
+            : <img src={apiAssetUrl(sponsor.logo_path)} alt={sponsor.name} />}
+        </li>)}</ul>
       </section>
     </main>
   </div>;

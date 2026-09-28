@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { api, apiAssetUrl, ApiError } from "../../api";
 import { useAuth } from "../../AuthContext";
 import { Alert } from "../../components/ui/Alert/Alert";
+import { RegularSponsorEditor } from "../../components/admin/RegularSponsorEditor/RegularSponsorEditor";
 import { Button } from "../../components/ui/Button/Button";
 import { Card } from "../../components/ui/Card/Card";
 import { MarkdownEditor } from "../../components/ui/MarkdownEditor/MarkdownEditor";
@@ -59,6 +60,7 @@ export function AdminWebStableContentPage() {
   const [profileFacebook, setProfileFacebook] = useState("");
   const [profileBankAccount, setProfileBankAccount] = useState("");
   const [profileAddress, setProfileAddress] = useState("");
+  const [sponsorEditorOpen, setSponsorEditorOpen] = useState(false);
   const qrPreview = useMemo(() => qrFile ? URL.createObjectURL(qrFile) : null, [qrFile]);
 
   useEffect(() => () => {
@@ -360,6 +362,16 @@ export function AdminWebStableContentPage() {
             </div>
           </div>
         </>)}
+    </Card>
+    <Card className={styles.sectionCard}>
+      <h2>{text.sponsorTitle}</h2>
+      <p>{text.sponsorBody}</p>
+      <div className={styles.actions}>
+        <Button variant="secondary" onClick={() => setSponsorEditorOpen((open) => !open)}>
+          {sponsorEditorOpen ? text.sponsorCloseEditor : text.sponsorOpenEditor}
+        </Button>
+      </div>
+      {sponsorEditorOpen && csrfToken && <RegularSponsorEditor csrfToken={csrfToken} />}
     </Card>
     <Card className={styles.profileCard}>
       <h2>{text.profileTitle}</h2>
