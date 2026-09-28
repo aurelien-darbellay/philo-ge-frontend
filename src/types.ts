@@ -43,6 +43,11 @@ export type BecomeMemberContent = {
   intro_de: string;
   intro_it: string;
   intro_en: string;
+  instruction_fr: string;
+  instruction_de: string;
+  instruction_it: string;
+  instruction_en: string;
+  qr_path: string;
   reg_quota: number;
   reduce_quota: number;
   bank_account?: string | null;

@@ -1,6 +1,5 @@
 import { useEffect, useState, type FormEvent } from "react";
-import { api, ApiError } from "../../api";
-import paymentQr from "../../assets/QRCode.png";
+import { api, apiAssetUrl, ApiError } from "../../api";
 import academyLogo from "../../assets/SAHSS_Logo.jpg";
 import { PublicHeader } from "../../components/public/PublicHeader/PublicHeader";
 import { Button } from "../../components/ui/Button/Button";
@@ -83,6 +82,14 @@ export function SupportPage() {
       en: becomeMemberContent.intro_en,
     }
     : null;
+  const paymentInstructionByLanguage = becomeMemberContent
+    ? {
+      fr: becomeMemberContent.instruction_fr,
+      de: becomeMemberContent.instruction_de,
+      it: becomeMemberContent.instruction_it,
+      en: becomeMemberContent.instruction_en,
+    }
+    : null;
   const quotaFormatter = new Intl.NumberFormat(languageLocales[language], {
     minimumFractionDigits: 0,
     maximumFractionDigits: 2,
@@ -90,6 +97,7 @@ export function SupportPage() {
   const regularQuotaLabel = becomeMemberContent ? `${quotaFormatter.format(becomeMemberContent.reg_quota)} CHF` : text.standardAmount;
   const reducedQuotaLabel = becomeMemberContent ? `${quotaFormatter.format(becomeMemberContent.reduce_quota)} CHF` : text.reducedAmount;
   const bankAccountLabel = becomeMemberContent?.bank_account?.trim() || text.iban;
+  const paymentQr = becomeMemberContent ? apiAssetUrl(becomeMemberContent.qr_path) : null;
 
   const submitting = subscriptionState === "submitting";
   const subscribe = async (event: FormEvent<HTMLFormElement>) => {
@@ -120,13 +128,13 @@ export function SupportPage() {
             <h3>{text.fees}</h3>
             <dl className={styles.fees}><div><dt>{text.standard}</dt><dd>{regularQuotaLabel}</dd></div><div><dt>{text.reduced}</dt><dd>{reducedQuotaLabel}</dd></div></dl>
             <p className={styles.accountLabel}>{text.account}</p><p className={styles.iban}>{bankAccountLabel}</p>
-            <p>{text.instructions}</p>
+            <p>{paymentInstructionByLanguage?.[language] ?? text.instructions}</p>
           </div>
-          <figure className={styles.qr}>
+          {paymentQr && <figure className={styles.qr}>
             <div className={styles.qrMat}><img src={paymentQr} alt={text.qrAlt} /></div>
             <figcaption>{text.qrCaption}</figcaption>
             <a href={paymentQr} download="GGPh-QR-paiement.png">{text.download}<span aria-hidden="true"> ↓</span></a>
-          </figure>
+          </figure>}
         </div>
       </section>
       <section className={`${styles.section} ${styles.newsletter}`} aria-labelledby="support-newsletter">

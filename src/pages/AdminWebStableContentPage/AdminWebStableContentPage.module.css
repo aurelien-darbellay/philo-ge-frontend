@@ -8,6 +8,9 @@
 .form { margin-top: var(--space-6); display: grid; gap: var(--space-5); }
 .introGrid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); }
 .quotaGrid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); }
+.qrEditor { display: grid; gap: var(--space-3); }
+.hint { margin: 0; color: var(--color-text-muted); font-size: var(--font-size-sm); }
+.qrPreview { display: block; width: min(100%, 18rem); max-height: 18rem; object-fit: contain; }
 .actions { display: flex; gap: var(--space-3); align-items: center; }
 .saved { margin: 0; color: var(--color-accent-dark); font-size: var(--font-size-sm); }
 .state { margin-top: var(--space-8); color: var(--color-text-muted); }

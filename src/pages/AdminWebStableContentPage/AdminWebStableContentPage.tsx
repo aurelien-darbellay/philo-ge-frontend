@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { api, ApiError } from "../../api";
+import { useEffect, useMemo, useState } from "react";
+import { api, apiAssetUrl, ApiError } from "../../api";
 import { useAuth } from "../../AuthContext";
 import { Alert } from "../../components/ui/Alert/Alert";
 import { Button } from "../../components/ui/Button/Button";
@@ -41,6 +41,12 @@ export function AdminWebStableContentPage() {
   const [introDe, setIntroDe] = useState("");
   const [introIt, setIntroIt] = useState("");
   const [introEn, setIntroEn] = useState("");
+  const [instructionFr, setInstructionFr] = useState("");
+  const [instructionDe, setInstructionDe] = useState("");
+  const [instructionIt, setInstructionIt] = useState("");
+  const [instructionEn, setInstructionEn] = useState("");
+  const [qrPath, setQrPath] = useState("");
+  const [qrFile, setQrFile] = useState<File | null>(null);
   const [regQuota, setRegQuota] = useState("");
   const [reduceQuota, setReduceQuota] = useState("");
   const [profileEditorOpen, setProfileEditorOpen] = useState(false);
@@ -53,6 +59,11 @@ export function AdminWebStableContentPage() {
   const [profileFacebook, setProfileFacebook] = useState("");
   const [profileBankAccount, setProfileBankAccount] = useState("");
   const [profileAddress, setProfileAddress] = useState("");
+  const qrPreview = useMemo(() => qrFile ? URL.createObjectURL(qrFile) : null, [qrFile]);
+
+  useEffect(() => () => {
+    if (qrPreview) URL.revokeObjectURL(qrPreview);
+  }, [qrPreview]);
 
   useEffect(() => {
     if (!aboutEditorOpen || !csrfToken) return;
@@ -114,6 +125,12 @@ export function AdminWebStableContentPage() {
     setIntroDe(content.intro_de);
     setIntroIt(content.intro_it);
     setIntroEn(content.intro_en);
+    setInstructionFr(content.instruction_fr);
+    setInstructionDe(content.instruction_de);
+    setInstructionIt(content.instruction_it);
+    setInstructionEn(content.instruction_en);
+    setQrPath(content.qr_path);
+    setQrFile(null);
     setRegQuota(content.reg_quota.toFixed(2));
     setReduceQuota(content.reduce_quota.toFixed(2));
   };
@@ -153,6 +170,11 @@ export function AdminWebStableContentPage() {
       || introDe.trim() === ""
       || introIt.trim() === ""
       || introEn.trim() === ""
+      || instructionFr.trim() === ""
+      || instructionDe.trim() === ""
+      || instructionIt.trim() === ""
+      || instructionEn.trim() === ""
+      || (qrPath === "" && qrFile === null)
       || !Number.isFinite(regular)
       || !Number.isFinite(reduced)
       || regular < 0
@@ -167,11 +189,19 @@ export function AdminWebStableContentPage() {
     setSaved(false);
     setError("");
     try {
+      const savedQrPath = qrFile
+        ? (await api.uploadBecomeMemberQr(qrFile, csrfToken)).image_path
+        : qrPath;
       const payload: BecomeMemberContent = {
         intro_fr: introFr.trim(),
         intro_de: introDe.trim(),
         intro_it: introIt.trim(),
         intro_en: introEn.trim(),
+        instruction_fr: instructionFr.trim(),
+        instruction_de: instructionDe.trim(),
+        instruction_it: instructionIt.trim(),
+        instruction_en: instructionEn.trim(),
+        qr_path: savedQrPath,
         reg_quota: regular,
         reduce_quota: reduced,
       };
@@ -309,9 +339,20 @@ export function AdminWebStableContentPage() {
               <TextArea label={text.introIt} value={introIt} onChange={(event) => setIntroIt(event.target.value)} />
               <TextArea label={text.introEn} value={introEn} onChange={(event) => setIntroEn(event.target.value)} />
             </div>
+            <div className={styles.introGrid}>
+              <TextArea label={text.instructionFr} value={instructionFr} onChange={(event) => setInstructionFr(event.target.value)} />
+              <TextArea label={text.instructionDe} value={instructionDe} onChange={(event) => setInstructionDe(event.target.value)} />
+              <TextArea label={text.instructionIt} value={instructionIt} onChange={(event) => setInstructionIt(event.target.value)} />
+              <TextArea label={text.instructionEn} value={instructionEn} onChange={(event) => setInstructionEn(event.target.value)} />
+            </div>
             <div className={styles.quotaGrid}>
               <TextField label={text.regQuota} type="number" min="0" step="0.01" value={regQuota} onChange={(event) => setRegQuota(event.target.value)} />
               <TextField label={text.reduceQuota} type="number" min="0" step="0.01" value={reduceQuota} onChange={(event) => setReduceQuota(event.target.value)} />
+            </div>
+            <div className={styles.qrEditor}>
+              <TextField label={text.qrFile} type="file" accept="image/jpeg,image/png,image/webp" onChange={(event) => setQrFile(event.target.files?.[0] ?? null)} />
+              <p className={styles.hint}>{text.qrHint}</p>
+              {(qrPreview || qrPath) && <img className={styles.qrPreview} src={qrPreview ?? apiAssetUrl(qrPath)} alt={text.qrPreviewAlt} />}
             </div>
             <div className={styles.actions}>
               <Button onClick={onSave} disabled={saving}>{saving ? text.saving : text.save}</Button>

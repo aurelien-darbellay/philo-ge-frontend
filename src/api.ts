@@ -67,6 +67,16 @@ export const api = {
       body: JSON.stringify(content),
     }),
 
+  uploadBecomeMemberQr: (image: File, csrfToken: string) => {
+    const body = new FormData();
+    body.append("image", image);
+    return request<{ image_path: string }>("/admin/become-member/image.php", {
+      method: "POST",
+      headers: { "X-CSRF-Token": csrfToken },
+      body,
+    });
+  },
+
   adminOrganizationProfile: () => request<{ profile: OrganizationProfile }>("/admin/organization-profile.php"),
 
   updateAdminOrganizationProfile: (profile: OrganizationProfile, csrfToken: string) =>
