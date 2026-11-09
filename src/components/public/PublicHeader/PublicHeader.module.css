@@ -1,7 +1,6 @@
 .header { position: sticky; top: 0; z-index: 10; background: var(--color-background); width: min(100%, calc(var(--page-width) + (2 * var(--page-gutter)))); min-height: 7rem; margin-inline: auto; padding: var(--space-5) var(--page-gutter); display: grid; grid-template-columns: minmax(0, 1fr) auto auto; column-gap: var(--space-6); align-items: center; border-bottom: 1px solid var(--color-border); }
-.brand { display: flex; align-items: center; gap: var(--space-3); min-width: 0; width: fit-content; color: var(--color-ink); text-decoration: none; }
+.brand { display: flex; align-items: center; min-width: 0; width: fit-content; color: var(--color-ink); text-decoration: none; }
 .brand > :first-child { flex-shrink: 0; }
-.organizationName { max-width: 24ch; font-size: var(--font-size-xs); font-weight: 600; line-height: 1.4; text-transform: uppercase; }
 .navigation { min-height: 2.5rem; display: flex; align-items: center; gap: var(--space-5); }
 .navigation a { color: var(--color-ink); font-size: var(--font-size-sm); text-decoration: none; transition: opacity var(--transition-fast); }
 .navigation a:hover { opacity: 0.55; }

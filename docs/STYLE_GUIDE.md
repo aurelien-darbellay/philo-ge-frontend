@@ -267,9 +267,10 @@ After visual changes:
 ## Public header
 
 The public header stays at the top while scrolling and uses the cream canvas.
-Display the full institutional name beside the compact logo, as requested in
-the client feedback. This is an approved exception to the adjacent-wordmark rule.
-Keep the official French organization name in every interface language.
+Use `src/assets/brand/logo-transparent-txt-enlarged.png` as the sole visible
+header identity. It already contains the full institutional name, so do not
+reproduce the name as adjacent text. Keep the official French organization
+name as the home link's accessible label in every interface language.
 Navigation order is Programme, À propos, Archives, Podcasts, Nous soutenir.
 The member entry remains available in the footer. At narrow widths, use the
 accessible collapsible menu and allow the institutional name to wrap.

@@ -12,7 +12,7 @@ export function PublicHeader() {
   const closeMenu = () => setMenuOpen(false);
 
   return <header className={styles.header}>
-    <Link className={styles.brand} to="/" aria-label={text.organizationName}><BrandMark compact /><span className={styles.organizationName}>{text.organizationName}</span></Link>
+    <Link className={styles.brand} to="/" aria-label={text.organizationName}><BrandMark variant="full" /></Link>
     <nav id="public-navigation" className={`${styles.navigation} ${menuOpen ? styles.navigationOpen : ""}`} aria-label={text.navigation}>
       <Link to="/programme" onClick={closeMenu}>{text.programme}</Link>
       <Link to="/#association" onClick={closeMenu}>{text.about}</Link>

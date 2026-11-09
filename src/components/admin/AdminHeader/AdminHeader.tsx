@@ -17,7 +17,7 @@ export function AdminHeader() {
   const onLogout = async () => { await logout(); navigate("/login"); };
 
   return <header className={styles.header}>
-    <Link className={styles.brand} to="/" aria-label={text.brand} onClick={closeMenu}><BrandMark compact /></Link>
+    <Link className={styles.brand} to="/" aria-label={text.brand} onClick={closeMenu}><BrandMark variant="compact" /></Link>
     <nav id="admin-navigation" className={`${styles.navigation} ${menuOpen ? styles.navigationOpen : ""}`} aria-label={text.navigation}>
       <Link to="/" onClick={closeMenu}>{text.home}</Link>
       {user?.role === "admin" && <Link to="/espace-membre" onClick={closeMenu}>{text.dashboard}</Link>}

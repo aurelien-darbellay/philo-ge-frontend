@@ -1,1 +1,5 @@
-.brand { display: flex; width: fit-content; margin-right: auto; margin-bottom: auto; align-self: flex-start; align-items: flex-start; justify-content: flex-start; text-decoration: none; }.mark { display: block; width: 4rem; height: auto; object-fit: contain; }.compact .mark { width: 2.75rem; }
+.brand { display: flex; width: fit-content; margin-right: auto; margin-bottom: auto; align-self: flex-start; align-items: flex-start; justify-content: flex-start; text-decoration: none; }
+.mark { display: block; height: auto; object-fit: contain; }
+.default .mark { width: 4rem; }
+.compact .mark { width: 2.75rem; }
+.full .mark { width: clamp(8.5rem, 12.75vw, 11.625rem); }

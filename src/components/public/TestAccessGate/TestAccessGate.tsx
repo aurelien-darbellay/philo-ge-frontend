@@ -38,7 +38,7 @@ export function TestAccessGate() {
 
   return <div className={styles.overlay} role="dialog" aria-modal="true" aria-labelledby="test-access-title">
     <section className={styles.banner}>
-      <div className={styles.header}><BrandMark compact /><LanguageSelector /></div>
+      <div className={styles.header}><BrandMark variant="compact" /><LanguageSelector /></div>
       <p className={styles.eyebrow}>{text.eyebrow}</p>
       <h1 id="test-access-title">{text.title}</h1>
       <p className={styles.body}>{text.body}</p>
